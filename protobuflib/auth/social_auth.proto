@@ -1,0 +1,14 @@
+syntax = "proto3";
+package auth;
+
+import "default-response.proto";
+option go_package = "github.com/anton-uvarenko/cinema/authorization-service/protobufs/auth";
+
+message SocialAuthPayload {
+  string code = 1;
+}
+
+service SocialAuth {
+  rpc GoogleAuth(SocialAuthPayload) returns (JwtResponse);
+  rpc Facebook(SocialAuthPayload) returns (JwtResponse);
+}

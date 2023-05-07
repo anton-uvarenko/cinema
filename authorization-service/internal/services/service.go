@@ -6,6 +6,7 @@ type Service struct {
 	AuthService             *AuthService
 	VerificationService     *VerificationService
 	PasswordRecoveryService *PassRecoverService
+	SocialAuthService       *SocialAuthService
 }
 
 func NewService(repo *repo.Repo) *Service {
@@ -13,5 +14,6 @@ func NewService(repo *repo.Repo) *Service {
 		AuthService:             NewAuthService(repo.UserRepo),
 		VerificationService:     NewVerificationService(repo.UserRepo),
 		PasswordRecoveryService: NewPasswordRecoveryService(repo.UserRepo),
+		SocialAuthService:       NewSocialAuthService(repo.UserRepo),
 	}
 }
