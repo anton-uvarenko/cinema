@@ -57,6 +57,131 @@ func (r *Router) InitRoutes() http.Handler {
 		})
 	})
 
+	app.Route("/films", func(router chi.Router) {
+		router.Group(func(rt chi.Router) {
+			mid := md.AuthMiddleware{
+				Recovery: false,
+				UserType: []core.UserType{
+					core.Admin,
+				},
+			}
+			rt.Use(mid.TokenVerify)
+
+			// films
+			rt.Post("/", r.controllers.FilmsController.RedirectRequest)
+			rt.Put("/{id}/update", r.controllers.FilmsController.RedirectRequest)
+			rt.Delete("/{id}/delete", r.controllers.FilmsController.RedirectRequest)
+		})
+
+		router.Group(func(rt chi.Router) {
+			mid := md.AuthMiddleware{
+				Recovery: false,
+				UserType: []core.UserType{
+					core.Admin,
+					core.Basic,
+					core.Premium,
+				},
+			}
+			rt.Use(mid.TokenVerify)
+
+			rt.Get("/", r.controllers.FilmsController.RedirectRequest)
+			rt.Get("/{id}", r.controllers.FilmsController.RedirectRequest)
+		})
+	})
+
+	app.Route("/films/genres", func(router chi.Router) {
+		router.Group(func(rt chi.Router) {
+			mid := md.AuthMiddleware{
+				Recovery: false,
+				UserType: []core.UserType{
+					core.Admin,
+				},
+			}
+			rt.Use(mid.TokenVerify)
+
+			rt.Post("/", r.controllers.FilmsController.RedirectRequest)
+			rt.Post("/{id}/update", r.controllers.FilmsController.RedirectRequest)
+			rt.Delete("/{id}/delete", r.controllers.FilmsController.RedirectRequest)
+		})
+
+		router.Group(func(rt chi.Router) {
+			mid := md.AuthMiddleware{
+				Recovery: false,
+				UserType: []core.UserType{
+					core.Admin,
+					core.Basic,
+					core.Premium,
+				},
+			}
+			rt.Use(mid.TokenVerify)
+
+			rt.Get("/", r.controllers.FilmsController.RedirectRequest)
+			rt.Get("/{id}", r.controllers.FilmsController.RedirectRequest)
+		})
+	})
+
+	app.Route("/actors", func(router chi.Router) {
+		router.Group(func(rt chi.Router) {
+			mid := md.AuthMiddleware{
+				Recovery: false,
+				UserType: []core.UserType{
+					core.Admin,
+				},
+			}
+			rt.Use(mid.TokenVerify)
+
+			rt.Post("/", r.controllers.FilmsController.RedirectRequest)
+			rt.Put("/{id}/update", r.controllers.FilmsController.RedirectRequest)
+			rt.Delete("/{id}/update", r.controllers.FilmsController.RedirectRequest)
+		})
+
+		router.Group(func(rt chi.Router) {
+			mid := md.AuthMiddleware{
+				Recovery: false,
+				UserType: []core.UserType{
+					core.Admin,
+					core.Basic,
+					core.Premium,
+				},
+			}
+			rt.Use(mid.TokenVerify)
+
+			rt.Get("/", r.controllers.FilmsController.RedirectRequest)
+			rt.Get("/{id}", r.controllers.FilmsController.RedirectRequest)
+		})
+	})
+
+	app.Route("/playlists", func(router chi.Router) {
+		router.Group(func(rt chi.Router) {
+			mid := md.AuthMiddleware{
+				Recovery: false,
+				UserType: []core.UserType{
+					core.Admin,
+				},
+			}
+			rt.Use(mid.TokenVerify)
+
+			rt.Post("/", r.controllers.FilmsController.RedirectRequest)
+			rt.Put("/{id/update}", r.controllers.FilmsController.RedirectRequest)
+			rt.Delete("/{id}/delete", r.controllers.FilmsController.RedirectRequest)
+		})
+
+		router.Group(func(rt chi.Router) {
+			mid := md.AuthMiddleware{
+				Recovery: false,
+				UserType: []core.UserType{
+					core.Admin,
+					core.Basic,
+					core.Premium,
+				},
+			}
+			rt.Use(mid.TokenVerify)
+
+			rt.Get("/", r.controllers.FilmsController.RedirectRequest)
+			rt.Get("/{id}", r.controllers.FilmsController.RedirectRequest)
+		})
+	})
+
 	return app
 }
 

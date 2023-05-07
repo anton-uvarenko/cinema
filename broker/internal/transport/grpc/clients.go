@@ -19,6 +19,7 @@ type AuthClients struct {
 }
 
 func ConnectAuthServer() AuthClients {
+	logrus.Info("auth dns name is: ", os.Getenv("DNS_AUTH"))
 	conn, err := grpc.Dial(
 		os.Getenv("DNS_AUTH")+":5000",
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
