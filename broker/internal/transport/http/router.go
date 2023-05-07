@@ -32,6 +32,7 @@ func (r *Router) InitRoutes() http.Handler {
 	app.Route("/auth", func(router chi.Router) {
 		router.Post("/signin", r.controllers.AuthController.SignIn)
 		router.Post("/signup", r.controllers.AuthController.SignUp)
+		router.Post("/google", r.controllers.SocialController.GoogleAuth)
 	})
 
 	app.Route("/verify", func(router chi.Router) {

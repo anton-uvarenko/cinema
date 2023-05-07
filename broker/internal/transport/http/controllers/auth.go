@@ -20,21 +20,6 @@ func NewAuthController(client auth.AuthClient) *AuthController {
 	}
 }
 
-type SignInPayload struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
-
-type SignUpPayload struct {
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
-
-type AuthResponse struct {
-	Jwt string `json:"jwt"`
-}
-
 func (c *AuthController) SignIn(w http.ResponseWriter, r *http.Request) {
 	payload := auth.SignInPayload{}
 	err := json.NewDecoder(r.Body).Decode(&payload)
