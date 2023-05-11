@@ -36,6 +36,7 @@ func (r *Router) InitRoutes() http.Handler {
 		router.Post("/signin", r.controllers.AuthController.SignIn)
 		router.Post("/signup", r.controllers.AuthController.SignUp)
 		router.Post("/google", r.controllers.SocialController.GoogleAuth)
+		router.Post("/facebook", r.controllers.SocialController.FacebookAuth)
 	})
 
 	app.Route("/verify", func(router chi.Router) {
