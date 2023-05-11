@@ -13,6 +13,7 @@ type SocialAuthController struct {
 
 type iSocialAuthService interface {
 	GoogleAuth(code string) (string, error)
+	FacebookAuth(code string) (string, error)
 }
 
 func NewSocialAuthController(service iSocialAuthService) *SocialAuthController {
@@ -23,6 +24,18 @@ func NewSocialAuthController(service iSocialAuthService) *SocialAuthController {
 
 func (c *SocialAuthController) GoogleAuth(ctx context.Context, payload *auth.SocialAuthPayload) (*auth.JwtResponse, error) {
 	jwt, err := c.service.GoogleAuth(payload.Code)
+	if err != nil {
+		fail := err.(pkg.Error)
+		return nil, pkg.NewRpcError(fail.Error(), fail.Code())
+	}
+
+	return &auth.JwtResponse{
+		Jwt: jwt,
+	}, nil
+}
+
+func (c *SocialAuthController) FacebookAuth(ctx context.Context, payload *auth.SocialAuthPayload) (*auth.JwtResponse, error) {
+	jwt, err := c.service.FacebookAuth(payload.Code)
 	if err != nil {
 		fail := err.(pkg.Error)
 		return nil, pkg.NewRpcError(fail.Error(), fail.Code())
