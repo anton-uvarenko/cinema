@@ -23,7 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SocialAuthClient interface {
 	GoogleAuth(ctx context.Context, in *SocialAuthPayload, opts ...grpc.CallOption) (*JwtResponse, error)
-	Facebook(ctx context.Context, in *SocialAuthPayload, opts ...grpc.CallOption) (*JwtResponse, error)
+	FacebookAuth(ctx context.Context, in *SocialAuthPayload, opts ...grpc.CallOption) (*JwtResponse, error)
 }
 
 type socialAuthClient struct {
@@ -43,9 +43,9 @@ func (c *socialAuthClient) GoogleAuth(ctx context.Context, in *SocialAuthPayload
 	return out, nil
 }
 
-func (c *socialAuthClient) Facebook(ctx context.Context, in *SocialAuthPayload, opts ...grpc.CallOption) (*JwtResponse, error) {
+func (c *socialAuthClient) FacebookAuth(ctx context.Context, in *SocialAuthPayload, opts ...grpc.CallOption) (*JwtResponse, error) {
 	out := new(JwtResponse)
-	err := c.cc.Invoke(ctx, "/auth.SocialAuth/Facebook", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/auth.SocialAuth/FacebookAuth", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +57,7 @@ func (c *socialAuthClient) Facebook(ctx context.Context, in *SocialAuthPayload, 
 // for forward compatibility
 type SocialAuthServer interface {
 	GoogleAuth(context.Context, *SocialAuthPayload) (*JwtResponse, error)
-	Facebook(context.Context, *SocialAuthPayload) (*JwtResponse, error)
+	FacebookAuth(context.Context, *SocialAuthPayload) (*JwtResponse, error)
 	mustEmbedUnimplementedSocialAuthServer()
 }
 
@@ -68,8 +68,8 @@ type UnimplementedSocialAuthServer struct {
 func (UnimplementedSocialAuthServer) GoogleAuth(context.Context, *SocialAuthPayload) (*JwtResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GoogleAuth not implemented")
 }
-func (UnimplementedSocialAuthServer) Facebook(context.Context, *SocialAuthPayload) (*JwtResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Facebook not implemented")
+func (UnimplementedSocialAuthServer) FacebookAuth(context.Context, *SocialAuthPayload) (*JwtResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FacebookAuth not implemented")
 }
 func (UnimplementedSocialAuthServer) mustEmbedUnimplementedSocialAuthServer() {}
 
@@ -102,20 +102,20 @@ func _SocialAuth_GoogleAuth_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _SocialAuth_Facebook_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _SocialAuth_FacebookAuth_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SocialAuthPayload)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(SocialAuthServer).Facebook(ctx, in)
+		return srv.(SocialAuthServer).FacebookAuth(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/auth.SocialAuth/Facebook",
+		FullMethod: "/auth.SocialAuth/FacebookAuth",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SocialAuthServer).Facebook(ctx, req.(*SocialAuthPayload))
+		return srv.(SocialAuthServer).FacebookAuth(ctx, req.(*SocialAuthPayload))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -132,8 +132,8 @@ var SocialAuth_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _SocialAuth_GoogleAuth_Handler,
 		},
 		{
-			MethodName: "Facebook",
-			Handler:    _SocialAuth_Facebook_Handler,
+			MethodName: "FacebookAuth",
+			Handler:    _SocialAuth_FacebookAuth_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

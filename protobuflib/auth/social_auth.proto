@@ -10,5 +10,5 @@ message SocialAuthPayload {
 
 service SocialAuth {
   rpc GoogleAuth(SocialAuthPayload) returns (JwtResponse);
-  rpc Facebook(SocialAuthPayload) returns (JwtResponse);
+  rpc FacebookAuth(SocialAuthPayload) returns (JwtResponse);
 }
