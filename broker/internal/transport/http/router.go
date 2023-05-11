@@ -5,6 +5,7 @@ import (
 	md "github.com/anton-uvarenko/cinema/broker-service/internal/pkg/middleware"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/cors"
 	"net/http"
 	"time"
 )
@@ -28,6 +29,8 @@ func (r *Router) InitRoutes() http.Handler {
 	app.Use(middleware.Recoverer)
 	app.Use(middleware.Logger)
 	app.Use(middleware.Heartbeat("/ping"))
+
+	InitCorsPolicy(app)
 
 	app.Route("/auth", func(router chi.Router) {
 		router.Post("/signin", r.controllers.AuthController.SignIn)
@@ -86,7 +89,7 @@ func (r *Router) InitRoutes() http.Handler {
 			rt.Use(mid.TokenVerify)
 
 			rt.Get("/", r.controllers.FilmsController.RedirectRequest)
-			rt.Get("/{id}", r.controllers.FilmsController.RedirectRequest)
+			rt.Get("/{id}/", r.controllers.FilmsController.RedirectRequest)
 		})
 	})
 
@@ -184,6 +187,17 @@ func (r *Router) InitRoutes() http.Handler {
 	})
 
 	return app
+}
+
+func InitCorsPolicy(r *chi.Mux) {
+	r.Use(cors.Handler(cors.Options{
+		AllowedOrigins:   []string{"https://*", "http://*"},
+		AllowedMethods:   []string{"PUT", "GET", "POST", "PATCH", "OPTIONS", "DELETE"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: false,
+		MaxAge:           300,
+	}))
 }
 
 func InitHttpServer(handler http.Handler) *http.Server {

@@ -28,7 +28,7 @@ func (c *FilmController) RedirectRequest(w http.ResponseWriter, r *http.Request)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	req, err := http.NewRequest(r.Method, "http://"+os.Getenv("DNS_FILMS")+":8000/"+r.URL.Path, bytes.NewBuffer(data))
+	req, err := http.NewRequest(r.Method, "http://"+os.Getenv("DNS_FILMS")+":8000"+r.URL.Path, bytes.NewBuffer(data))
 	if err != nil {
 		logrus.Errorf("request create: %v", err)
 		http.Error(w, "couldn't create request", http.StatusInternalServerError)
