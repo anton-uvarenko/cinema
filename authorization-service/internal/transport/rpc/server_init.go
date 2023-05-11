@@ -16,4 +16,5 @@ func SetUpServerControllers(server *grpc.Server, services *services.Service) {
 	auth.RegisterAuthServer(server, controllers.NewAuthController(services.AuthService))
 	auth.RegisterVerificationServer(server, controllers.NewVerificationController(services.VerificationService))
 	auth.RegisterPassVerifyServer(server, controllers.NewPassRecoveryController(services.PasswordRecoveryService))
+	auth.RegisterSocialAuthServer(server, controllers.NewSocialAuthController(services.SocialAuthService))
 }

@@ -16,9 +16,11 @@ type AuthClients struct {
 	AuthClient         auth.AuthClient
 	VerificationClient auth.VerificationClient
 	PassRecoveryClient auth.PassVerifyClient
+	SocialClient       auth.SocialAuthClient
 }
 
 func ConnectAuthServer() AuthClients {
+	logrus.Info("auth dns name is: ", os.Getenv("DNS_AUTH"))
 	conn, err := grpc.Dial(
 		os.Getenv("DNS_AUTH")+":5000",
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
@@ -37,6 +39,7 @@ func ConnectAuthServer() AuthClients {
 		AuthClient:         auth.NewAuthClient(conn),
 		VerificationClient: auth.NewVerificationClient(conn),
 		PassRecoveryClient: auth.NewPassVerifyClient(conn),
+		SocialClient:       auth.NewSocialAuthClient(conn),
 	}
 
 	return clients

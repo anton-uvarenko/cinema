@@ -14,13 +14,20 @@ type AuthMiddleware struct {
 
 func (m AuthMiddleware) TokenVerify(next http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
-		token := strings.Split(r.Header.Get("Authorization"), " ")[1]
-		if len(token) == 0 {
+		header := r.Header.Get("Authorization")
+
+		token := strings.Split(header, " ")
+		if len(token) < 2 {
 			http.Error(w, "no jwt", http.StatusUnauthorized)
 			return
 		}
 
-		err := pkg.Verify(token, m.UserType, m.Recovery)
+		if token[0] != "Bearer" {
+			http.Error(w, "not bearer authorization", http.StatusUnauthorized)
+			return
+		}
+
+		err := pkg.Verify(token[1], m.UserType, m.Recovery)
 
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusForbidden)
