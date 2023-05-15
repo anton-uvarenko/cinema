@@ -1,0 +1,41 @@
+syntax = "proto3";
+package users;
+
+import "default-response.proto";
+import "google/protobuf/timestamp.proto";
+option go_package = "github.com/anton-uvarenko/cinema/user-service/protobufs/users";
+
+message Comment {
+  int32 Id = 1;
+  int32 FilmId = 2;
+  string Text = 3;
+  int32 UserId = 4;
+  int32 ReplyTo = 5;
+  string CommentType = 6;
+  bool WasEdited = 7;
+  google.protobuf.Timestamp CreatedAt = 8;
+  google.protobuf.Timestamp UpdatedAt = 9;
+}
+
+message CommentsResponse {
+  repeated Comment comments = 1;
+}
+
+message CommentPayload {
+  int32 FilmId = 1;
+  int32 Text = 2;
+  int32 UserId = 3;
+  int32 ReplyTo = 4;
+  string CommentType = 6;
+}
+
+message LikeCommentPayload {
+  int32 FilmId = 1;
+  int32 UserId = 2;
+}
+
+service Comments {
+  rpc AddComment(CommentPayload) returns (Comment);
+  rpc GetComments(Empty) returns (CommentsResponse);
+  rpc LikeComment(LikeCommentPayload) returns (Empty);
+}

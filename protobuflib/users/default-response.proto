@@ -1,0 +1,6 @@
+syntax = "proto3";
+package users;
+
+option go_package = "github.com/anton-uvarenko/cinema/user-service/protobufs/users";
+
+message Empty {}
