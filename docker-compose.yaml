@@ -41,6 +41,21 @@ services:
     networks:
       - local
 
+  users:
+    container_name: users
+    build:
+      context: ./user-service
+      dockerfile: user-service.dockerfile
+    env_file:
+      - "./user-service/.env"
+    volumes:
+      - ./user-service:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - local
+
   postgres:
     container_name: "pg-db"
     image: postgres
