@@ -20,7 +20,7 @@ const (
 type User struct {
 	Id                   int       `json:"id" db:"id"`
 	Avatar               string    `json:"avatar" db:"avatar_name"`
-	Username             string    `json:"username" db:"username" validate:"required,alphanum,lte=8,gte=2"`
+	Username             string    `json:"username" db:"username" validate:"required,alphanum,lte=20,gte=2"`
 	Email                string    `json:"email" db:"email" validate:"required,email"`
 	Password             string    `json:"password" db:"password" validate:"required,gte=8,lte=40,password"`
 	Salt                 string    `json:"salt" db:"salt"`
