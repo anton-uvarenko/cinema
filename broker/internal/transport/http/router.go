@@ -26,9 +26,9 @@ func NewRouter(controllers *Controllers) *Router {
 
 func (r *Router) InitRoutes() http.Handler {
 	app := chi.NewRouter()
-	app.Use(middleware.Recoverer)
-	app.Use(middleware.Logger)
 	app.Use(middleware.Heartbeat("/ping"))
+	app.Use(middleware.Logger)
+	app.Use(middleware.Recoverer)
 
 	InitCorsPolicy(app)
 
