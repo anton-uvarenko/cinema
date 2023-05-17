@@ -35,6 +35,15 @@ func (r *Router) InitRoutes() http.Handler {
 	})
 
 	app.Route("/verify", func(router chi.Router) {
+		mid := md.AuthMiddleware{
+			Recovery: false,
+			UserType: []core.UserType{
+				core.Premium,
+				core.Basic,
+				core.Admin,
+			},
+		}
+		router.Use(mid.TokenVerify)
 		router.Get("/send", r.controllers.VerificationController.SendCode)
 		router.Post("/check", r.controllers.VerificationController.VerifyCode)
 	})
