@@ -1,7 +1,7 @@
 syntax = "proto3";
 package auth;
 
-import "default-response.proto";
+import "general.proto";
 option go_package = "github.com/anton-uvarenko/cinema/authorization-service/protobufs/auth";
 
 message VerificationPayload {
@@ -14,6 +14,6 @@ message IdPayload {
 }
 
 service Verification {
-    rpc SendCode(IdPayload) returns (Empty);
-    rpc VerifyCode(VerificationPayload) returns (Empty);
+    rpc SendCode(IdPayload) returns (general.Empty);
+    rpc VerifyCode(VerificationPayload) returns (general.Empty);
 }

@@ -1,7 +1,7 @@
 syntax = "proto3";
 package users;
 
-import "default-response.proto";
+import "general.proto";
 import "google/protobuf/timestamp.proto";
 option go_package = "github.com/anton-uvarenko/cinema/user-service/protobufs/users";
 
@@ -36,6 +36,6 @@ message LikeCommentPayload {
 
 service Comments {
   rpc AddComment(CommentPayload) returns (Comment);
-  rpc GetComments(Empty) returns (CommentsResponse);
-  rpc LikeComment(LikeCommentPayload) returns (Empty);
+  rpc GetComments(general.Empty) returns (CommentsResponse);
+  rpc LikeComment(LikeCommentPayload) returns (genral.Empty);
 }
