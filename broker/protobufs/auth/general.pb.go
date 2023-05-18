@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.27.1
 // 	protoc        v3.12.4
-// source: default-response.proto
+// source: general.proto
 
 package auth
 
@@ -31,7 +31,7 @@ type JwtResponse struct {
 func (x *JwtResponse) Reset() {
 	*x = JwtResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_default_response_proto_msgTypes[0]
+		mi := &file_general_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -44,7 +44,7 @@ func (x *JwtResponse) String() string {
 func (*JwtResponse) ProtoMessage() {}
 
 func (x *JwtResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_default_response_proto_msgTypes[0]
+	mi := &file_general_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -57,7 +57,7 @@ func (x *JwtResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use JwtResponse.ProtoReflect.Descriptor instead.
 func (*JwtResponse) Descriptor() ([]byte, []int) {
-	return file_default_response_proto_rawDescGZIP(), []int{0}
+	return file_general_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *JwtResponse) GetJwt() string {
@@ -76,7 +76,7 @@ type Empty struct {
 func (x *Empty) Reset() {
 	*x = Empty{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_default_response_proto_msgTypes[1]
+		mi := &file_general_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -89,7 +89,7 @@ func (x *Empty) String() string {
 func (*Empty) ProtoMessage() {}
 
 func (x *Empty) ProtoReflect() protoreflect.Message {
-	mi := &file_default_response_proto_msgTypes[1]
+	mi := &file_general_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -102,42 +102,42 @@ func (x *Empty) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Empty.ProtoReflect.Descriptor instead.
 func (*Empty) Descriptor() ([]byte, []int) {
-	return file_default_response_proto_rawDescGZIP(), []int{1}
+	return file_general_proto_rawDescGZIP(), []int{1}
 }
 
-var File_default_response_proto protoreflect.FileDescriptor
+var File_general_proto protoreflect.FileDescriptor
 
-var file_default_response_proto_rawDesc = []byte{
-	0x0a, 0x16, 0x64, 0x65, 0x66, 0x61, 0x75, 0x6c, 0x74, 0x2d, 0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e,
-	0x73, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x04, 0x61, 0x75, 0x74, 0x68, 0x22, 0x1f,
-	0x0a, 0x0b, 0x4a, 0x77, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x10, 0x0a,
-	0x03, 0x6a, 0x77, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6a, 0x77, 0x74, 0x22,
-	0x07, 0x0a, 0x05, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x42, 0x47, 0x5a, 0x45, 0x67, 0x69, 0x74, 0x68,
-	0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x61, 0x6e, 0x74, 0x6f, 0x6e, 0x2d, 0x75, 0x76, 0x61,
-	0x72, 0x65, 0x6e, 0x6b, 0x6f, 0x2f, 0x63, 0x69, 0x6e, 0x65, 0x6d, 0x61, 0x2f, 0x61, 0x75, 0x74,
-	0x68, 0x6f, 0x72, 0x69, 0x7a, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2d, 0x73, 0x65, 0x72, 0x76, 0x69,
-	0x63, 0x65, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x73, 0x2f, 0x61, 0x75, 0x74,
-	0x68, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+var file_general_proto_rawDesc = []byte{
+	0x0a, 0x0d, 0x67, 0x65, 0x6e, 0x65, 0x72, 0x61, 0x6c, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12,
+	0x07, 0x67, 0x65, 0x6e, 0x65, 0x72, 0x61, 0x6c, 0x22, 0x1f, 0x0a, 0x0b, 0x4a, 0x77, 0x74, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x6a, 0x77, 0x74, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6a, 0x77, 0x74, 0x22, 0x07, 0x0a, 0x05, 0x45, 0x6d, 0x70,
+	0x74, 0x79, 0x42, 0x47, 0x5a, 0x45, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d,
+	0x2f, 0x61, 0x6e, 0x74, 0x6f, 0x6e, 0x2d, 0x75, 0x76, 0x61, 0x72, 0x65, 0x6e, 0x6b, 0x6f, 0x2f,
+	0x63, 0x69, 0x6e, 0x65, 0x6d, 0x61, 0x2f, 0x61, 0x75, 0x74, 0x68, 0x6f, 0x72, 0x69, 0x7a, 0x61,
+	0x74, 0x69, 0x6f, 0x6e, 0x2d, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2f, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x62, 0x75, 0x66, 0x73, 0x2f, 0x61, 0x75, 0x74, 0x68, 0x62, 0x06, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x33,
 }
 
 var (
-	file_default_response_proto_rawDescOnce sync.Once
-	file_default_response_proto_rawDescData = file_default_response_proto_rawDesc
+	file_general_proto_rawDescOnce sync.Once
+	file_general_proto_rawDescData = file_general_proto_rawDesc
 )
 
-func file_default_response_proto_rawDescGZIP() []byte {
-	file_default_response_proto_rawDescOnce.Do(func() {
-		file_default_response_proto_rawDescData = protoimpl.X.CompressGZIP(file_default_response_proto_rawDescData)
+func file_general_proto_rawDescGZIP() []byte {
+	file_general_proto_rawDescOnce.Do(func() {
+		file_general_proto_rawDescData = protoimpl.X.CompressGZIP(file_general_proto_rawDescData)
 	})
-	return file_default_response_proto_rawDescData
+	return file_general_proto_rawDescData
 }
 
-var file_default_response_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
-var file_default_response_proto_goTypes = []interface{}{
-	(*JwtResponse)(nil), // 0: auth.JwtResponse
-	(*Empty)(nil),       // 1: auth.Empty
+var file_general_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_general_proto_goTypes = []interface{}{
+	(*JwtResponse)(nil), // 0: general.JwtResponse
+	(*Empty)(nil),       // 1: general.Empty
 }
-var file_default_response_proto_depIdxs = []int32{
+var file_general_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
 	0, // [0:0] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -145,13 +145,13 @@ var file_default_response_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_default_response_proto_init() }
-func file_default_response_proto_init() {
-	if File_default_response_proto != nil {
+func init() { file_general_proto_init() }
+func file_general_proto_init() {
+	if File_general_proto != nil {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_default_response_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_general_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*JwtResponse); i {
 			case 0:
 				return &v.state
@@ -163,7 +163,7 @@ func file_default_response_proto_init() {
 				return nil
 			}
 		}
-		file_default_response_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_general_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Empty); i {
 			case 0:
 				return &v.state
@@ -180,18 +180,18 @@ func file_default_response_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_default_response_proto_rawDesc,
+			RawDescriptor: file_general_proto_rawDesc,
 			NumEnums:      0,
 			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_default_response_proto_goTypes,
-		DependencyIndexes: file_default_response_proto_depIdxs,
-		MessageInfos:      file_default_response_proto_msgTypes,
+		GoTypes:           file_general_proto_goTypes,
+		DependencyIndexes: file_general_proto_depIdxs,
+		MessageInfos:      file_general_proto_msgTypes,
 	}.Build()
-	File_default_response_proto = out.File
-	file_default_response_proto_rawDesc = nil
-	file_default_response_proto_goTypes = nil
-	file_default_response_proto_depIdxs = nil
+	File_general_proto = out.File
+	file_general_proto_rawDesc = nil
+	file_general_proto_goTypes = nil
+	file_general_proto_depIdxs = nil
 }
