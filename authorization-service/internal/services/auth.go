@@ -55,6 +55,15 @@ func (s *AuthService) SignIn(user *entities.User) (string, error) {
 }
 
 func (s *AuthService) SignUp(user *entities.User) (string, error) {
+	dbU, err := s.userRepo.GetUserByEmail(user.Email)
+	if err != nil && err != sql.ErrNoRows {
+		return "", pkg.NewError("db error", http.StatusInternalServerError)
+	}
+
+	if dbU != nil {
+		return "", pkg.NewError("email is already registered", http.StatusConflict)
+	}
+
 	user.CreatedAt = time.Now()
 	user.UpdatedAt = time.Now()
 	user.Salt, user.Password = password.Encode(user.Password, nil)
