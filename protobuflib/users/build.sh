@@ -5,7 +5,6 @@ generate() {
           --go-grpc_out=../../$1/protobufs/users --go-grpc_opt=paths=source_relative \
           --proto_path=../general \
           --proto_path=. \
-          ../general/*.proto \
            *.proto
 }
 
