@@ -1,7 +1,7 @@
 syntax = "proto3";
 package general;
 
-option go_package = "github.com/anton-uvarenko/cinema/broker-service/protobufs/general";
+option go_package = "github.com/anton-uvarenko/cinema/authorization-service/protobufs/general";
 
 message JwtResponse {
   string jwt = 1;

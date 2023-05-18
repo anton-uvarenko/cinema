@@ -7,6 +7,7 @@
 package auth
 
 import (
+	general "github.com/anton-uvarenko/cinema/authorization-service/protobufs/general"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -182,9 +183,9 @@ func file_auth_proto_rawDescGZIP() []byte {
 
 var file_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_auth_proto_goTypes = []interface{}{
-	(*SignUpPayload)(nil), // 0: auth.SignUpPayload
-	(*SignInPayload)(nil), // 1: auth.SignInPayload
-	(*JwtResponse)(nil),   // 2: general.JwtResponse
+	(*SignUpPayload)(nil),       // 0: auth.SignUpPayload
+	(*SignInPayload)(nil),       // 1: auth.SignInPayload
+	(*general.JwtResponse)(nil), // 2: general.JwtResponse
 }
 var file_auth_proto_depIdxs = []int32{
 	1, // 0: auth.Auth.SignIn:input_type -> auth.SignInPayload
@@ -203,7 +204,6 @@ func file_auth_proto_init() {
 	if File_auth_proto != nil {
 		return
 	}
-	file_general_proto_init()
 	if !protoimpl.UnsafeEnabled {
 		file_auth_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*SignUpPayload); i {

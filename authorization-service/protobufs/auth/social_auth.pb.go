@@ -7,6 +7,7 @@
 package auth
 
 import (
+	general "github.com/anton-uvarenko/cinema/authorization-service/protobufs/general"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -105,8 +106,8 @@ func file_social_auth_proto_rawDescGZIP() []byte {
 
 var file_social_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_social_auth_proto_goTypes = []interface{}{
-	(*SocialAuthPayload)(nil), // 0: auth.SocialAuthPayload
-	(*JwtResponse)(nil),       // 1: general.JwtResponse
+	(*SocialAuthPayload)(nil),   // 0: auth.SocialAuthPayload
+	(*general.JwtResponse)(nil), // 1: general.JwtResponse
 }
 var file_social_auth_proto_depIdxs = []int32{
 	0, // 0: auth.SocialAuth.GoogleAuth:input_type -> auth.SocialAuthPayload
@@ -125,7 +126,6 @@ func file_social_auth_proto_init() {
 	if File_social_auth_proto != nil {
 		return
 	}
-	file_general_proto_init()
 	if !protoimpl.UnsafeEnabled {
 		file_social_auth_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*SocialAuthPayload); i {

@@ -8,6 +8,7 @@ package auth
 
 import (
 	context "context"
+	general "github.com/anton-uvarenko/cinema/authorization-service/protobufs/general"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -22,8 +23,8 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthClient interface {
-	SignIn(ctx context.Context, in *SignInPayload, opts ...grpc.CallOption) (*JwtResponse, error)
-	SignUp(ctx context.Context, in *SignUpPayload, opts ...grpc.CallOption) (*JwtResponse, error)
+	SignIn(ctx context.Context, in *SignInPayload, opts ...grpc.CallOption) (*general.JwtResponse, error)
+	SignUp(ctx context.Context, in *SignUpPayload, opts ...grpc.CallOption) (*general.JwtResponse, error)
 }
 
 type authClient struct {
@@ -34,8 +35,8 @@ func NewAuthClient(cc grpc.ClientConnInterface) AuthClient {
 	return &authClient{cc}
 }
 
-func (c *authClient) SignIn(ctx context.Context, in *SignInPayload, opts ...grpc.CallOption) (*JwtResponse, error) {
-	out := new(JwtResponse)
+func (c *authClient) SignIn(ctx context.Context, in *SignInPayload, opts ...grpc.CallOption) (*general.JwtResponse, error) {
+	out := new(general.JwtResponse)
 	err := c.cc.Invoke(ctx, "/auth.Auth/SignIn", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -43,8 +44,8 @@ func (c *authClient) SignIn(ctx context.Context, in *SignInPayload, opts ...grpc
 	return out, nil
 }
 
-func (c *authClient) SignUp(ctx context.Context, in *SignUpPayload, opts ...grpc.CallOption) (*JwtResponse, error) {
-	out := new(JwtResponse)
+func (c *authClient) SignUp(ctx context.Context, in *SignUpPayload, opts ...grpc.CallOption) (*general.JwtResponse, error) {
+	out := new(general.JwtResponse)
 	err := c.cc.Invoke(ctx, "/auth.Auth/SignUp", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -56,8 +57,8 @@ func (c *authClient) SignUp(ctx context.Context, in *SignUpPayload, opts ...grpc
 // All implementations must embed UnimplementedAuthServer
 // for forward compatibility
 type AuthServer interface {
-	SignIn(context.Context, *SignInPayload) (*JwtResponse, error)
-	SignUp(context.Context, *SignUpPayload) (*JwtResponse, error)
+	SignIn(context.Context, *SignInPayload) (*general.JwtResponse, error)
+	SignUp(context.Context, *SignUpPayload) (*general.JwtResponse, error)
 	mustEmbedUnimplementedAuthServer()
 }
 
@@ -65,10 +66,10 @@ type AuthServer interface {
 type UnimplementedAuthServer struct {
 }
 
-func (UnimplementedAuthServer) SignIn(context.Context, *SignInPayload) (*JwtResponse, error) {
+func (UnimplementedAuthServer) SignIn(context.Context, *SignInPayload) (*general.JwtResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SignIn not implemented")
 }
-func (UnimplementedAuthServer) SignUp(context.Context, *SignUpPayload) (*JwtResponse, error) {
+func (UnimplementedAuthServer) SignUp(context.Context, *SignUpPayload) (*general.JwtResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SignUp not implemented")
 }
 func (UnimplementedAuthServer) mustEmbedUnimplementedAuthServer() {}

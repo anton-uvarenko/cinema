@@ -8,6 +8,7 @@ package auth
 
 import (
 	context "context"
+	general "github.com/anton-uvarenko/cinema/authorization-service/protobufs/general"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -22,8 +23,8 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type VerificationClient interface {
-	SendCode(ctx context.Context, in *IdPayload, opts ...grpc.CallOption) (*Empty, error)
-	VerifyCode(ctx context.Context, in *VerificationPayload, opts ...grpc.CallOption) (*Empty, error)
+	SendCode(ctx context.Context, in *IdPayload, opts ...grpc.CallOption) (*general.Empty, error)
+	VerifyCode(ctx context.Context, in *VerificationPayload, opts ...grpc.CallOption) (*general.Empty, error)
 }
 
 type verificationClient struct {
@@ -34,8 +35,8 @@ func NewVerificationClient(cc grpc.ClientConnInterface) VerificationClient {
 	return &verificationClient{cc}
 }
 
-func (c *verificationClient) SendCode(ctx context.Context, in *IdPayload, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
+func (c *verificationClient) SendCode(ctx context.Context, in *IdPayload, opts ...grpc.CallOption) (*general.Empty, error) {
+	out := new(general.Empty)
 	err := c.cc.Invoke(ctx, "/auth.Verification/SendCode", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -43,8 +44,8 @@ func (c *verificationClient) SendCode(ctx context.Context, in *IdPayload, opts .
 	return out, nil
 }
 
-func (c *verificationClient) VerifyCode(ctx context.Context, in *VerificationPayload, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
+func (c *verificationClient) VerifyCode(ctx context.Context, in *VerificationPayload, opts ...grpc.CallOption) (*general.Empty, error) {
+	out := new(general.Empty)
 	err := c.cc.Invoke(ctx, "/auth.Verification/VerifyCode", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -56,8 +57,8 @@ func (c *verificationClient) VerifyCode(ctx context.Context, in *VerificationPay
 // All implementations must embed UnimplementedVerificationServer
 // for forward compatibility
 type VerificationServer interface {
-	SendCode(context.Context, *IdPayload) (*Empty, error)
-	VerifyCode(context.Context, *VerificationPayload) (*Empty, error)
+	SendCode(context.Context, *IdPayload) (*general.Empty, error)
+	VerifyCode(context.Context, *VerificationPayload) (*general.Empty, error)
 	mustEmbedUnimplementedVerificationServer()
 }
 
@@ -65,10 +66,10 @@ type VerificationServer interface {
 type UnimplementedVerificationServer struct {
 }
 
-func (UnimplementedVerificationServer) SendCode(context.Context, *IdPayload) (*Empty, error) {
+func (UnimplementedVerificationServer) SendCode(context.Context, *IdPayload) (*general.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendCode not implemented")
 }
-func (UnimplementedVerificationServer) VerifyCode(context.Context, *VerificationPayload) (*Empty, error) {
+func (UnimplementedVerificationServer) VerifyCode(context.Context, *VerificationPayload) (*general.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyCode not implemented")
 }
 func (UnimplementedVerificationServer) mustEmbedUnimplementedVerificationServer() {}

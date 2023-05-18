@@ -8,6 +8,7 @@ package auth
 
 import (
 	context "context"
+	general "github.com/anton-uvarenko/cinema/authorization-service/protobufs/general"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -22,8 +23,8 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SocialAuthClient interface {
-	GoogleAuth(ctx context.Context, in *SocialAuthPayload, opts ...grpc.CallOption) (*JwtResponse, error)
-	FacebookAuth(ctx context.Context, in *SocialAuthPayload, opts ...grpc.CallOption) (*JwtResponse, error)
+	GoogleAuth(ctx context.Context, in *SocialAuthPayload, opts ...grpc.CallOption) (*general.JwtResponse, error)
+	FacebookAuth(ctx context.Context, in *SocialAuthPayload, opts ...grpc.CallOption) (*general.JwtResponse, error)
 }
 
 type socialAuthClient struct {
@@ -34,8 +35,8 @@ func NewSocialAuthClient(cc grpc.ClientConnInterface) SocialAuthClient {
 	return &socialAuthClient{cc}
 }
 
-func (c *socialAuthClient) GoogleAuth(ctx context.Context, in *SocialAuthPayload, opts ...grpc.CallOption) (*JwtResponse, error) {
-	out := new(JwtResponse)
+func (c *socialAuthClient) GoogleAuth(ctx context.Context, in *SocialAuthPayload, opts ...grpc.CallOption) (*general.JwtResponse, error) {
+	out := new(general.JwtResponse)
 	err := c.cc.Invoke(ctx, "/auth.SocialAuth/GoogleAuth", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -43,8 +44,8 @@ func (c *socialAuthClient) GoogleAuth(ctx context.Context, in *SocialAuthPayload
 	return out, nil
 }
 
-func (c *socialAuthClient) FacebookAuth(ctx context.Context, in *SocialAuthPayload, opts ...grpc.CallOption) (*JwtResponse, error) {
-	out := new(JwtResponse)
+func (c *socialAuthClient) FacebookAuth(ctx context.Context, in *SocialAuthPayload, opts ...grpc.CallOption) (*general.JwtResponse, error) {
+	out := new(general.JwtResponse)
 	err := c.cc.Invoke(ctx, "/auth.SocialAuth/FacebookAuth", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -56,8 +57,8 @@ func (c *socialAuthClient) FacebookAuth(ctx context.Context, in *SocialAuthPaylo
 // All implementations must embed UnimplementedSocialAuthServer
 // for forward compatibility
 type SocialAuthServer interface {
-	GoogleAuth(context.Context, *SocialAuthPayload) (*JwtResponse, error)
-	FacebookAuth(context.Context, *SocialAuthPayload) (*JwtResponse, error)
+	GoogleAuth(context.Context, *SocialAuthPayload) (*general.JwtResponse, error)
+	FacebookAuth(context.Context, *SocialAuthPayload) (*general.JwtResponse, error)
 	mustEmbedUnimplementedSocialAuthServer()
 }
 
@@ -65,10 +66,10 @@ type SocialAuthServer interface {
 type UnimplementedSocialAuthServer struct {
 }
 
-func (UnimplementedSocialAuthServer) GoogleAuth(context.Context, *SocialAuthPayload) (*JwtResponse, error) {
+func (UnimplementedSocialAuthServer) GoogleAuth(context.Context, *SocialAuthPayload) (*general.JwtResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GoogleAuth not implemented")
 }
-func (UnimplementedSocialAuthServer) FacebookAuth(context.Context, *SocialAuthPayload) (*JwtResponse, error) {
+func (UnimplementedSocialAuthServer) FacebookAuth(context.Context, *SocialAuthPayload) (*general.JwtResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FacebookAuth not implemented")
 }
 func (UnimplementedSocialAuthServer) mustEmbedUnimplementedSocialAuthServer() {}
