@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/anton-uvarenko/cinema/authorization-service/internal/pkg"
 	"github.com/anton-uvarenko/cinema/authorization-service/protobufs/auth"
+	"github.com/anton-uvarenko/cinema/authorization-service/protobufs/general"
 )
 
 type SocialAuthController struct {
@@ -22,26 +23,26 @@ func NewSocialAuthController(service iSocialAuthService) *SocialAuthController {
 	}
 }
 
-func (c *SocialAuthController) GoogleAuth(ctx context.Context, payload *auth.SocialAuthPayload) (*auth.JwtResponse, error) {
+func (c *SocialAuthController) GoogleAuth(ctx context.Context, payload *auth.SocialAuthPayload) (*general.JwtResponse, error) {
 	jwt, err := c.service.GoogleAuth(payload.Code)
 	if err != nil {
 		fail := err.(pkg.Error)
 		return nil, pkg.NewRpcError(fail.Error(), fail.Code())
 	}
 
-	return &auth.JwtResponse{
+	return &general.JwtResponse{
 		Jwt: jwt,
 	}, nil
 }
 
-func (c *SocialAuthController) FacebookAuth(ctx context.Context, payload *auth.SocialAuthPayload) (*auth.JwtResponse, error) {
+func (c *SocialAuthController) FacebookAuth(ctx context.Context, payload *auth.SocialAuthPayload) (*general.JwtResponse, error) {
 	jwt, err := c.service.FacebookAuth(payload.Code)
 	if err != nil {
 		fail := err.(pkg.Error)
 		return nil, pkg.NewRpcError(fail.Error(), fail.Code())
 	}
 
-	return &auth.JwtResponse{
+	return &general.JwtResponse{
 		Jwt: jwt,
 	}, nil
 }

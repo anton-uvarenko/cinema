@@ -5,6 +5,7 @@ import (
 	"github.com/anton-uvarenko/cinema/authorization-service/internal/core/repo/entities"
 	"github.com/anton-uvarenko/cinema/authorization-service/internal/pkg"
 	"github.com/anton-uvarenko/cinema/authorization-service/protobufs/auth"
+	"github.com/anton-uvarenko/cinema/authorization-service/protobufs/general"
 	"github.com/sirupsen/logrus"
 	"net/http"
 )
@@ -26,17 +27,17 @@ func NewPassRecoveryController(service iPassRecoveryService) *PassRecoveryContro
 	}
 }
 
-func (c *PassRecoveryController) SendRecoveryCode(ctx context.Context, email *auth.EmailPayload) (*auth.Empty, error) {
+func (c *PassRecoveryController) SendRecoveryCode(ctx context.Context, email *auth.EmailPayload) (*general.Empty, error) {
 	err := c.service.SendRecoveryCode(email.Email)
 	if err != nil {
 		logrus.Error(err)
 		fail := err.(pkg.Error)
 		return nil, pkg.NewRpcError(fail.Error(), fail.Code())
 	}
-	return &auth.Empty{}, nil
+	return &general.Empty{}, nil
 }
 
-func (c *PassRecoveryController) VerifyRecoveryCode(ctx context.Context, code *auth.CodePayload) (*auth.JwtResponse, error) {
+func (c *PassRecoveryController) VerifyRecoveryCode(ctx context.Context, code *auth.CodePayload) (*general.JwtResponse, error) {
 	user, err := c.service.Verify(code.Email, int(code.Code))
 	if err != nil {
 		logrus.Error(err)
@@ -50,12 +51,12 @@ func (c *PassRecoveryController) VerifyRecoveryCode(ctx context.Context, code *a
 		return nil, pkg.NewRpcError("error creating jwt", http.StatusInternalServerError)
 	}
 
-	return &auth.JwtResponse{
+	return &general.JwtResponse{
 		Jwt: token,
 	}, nil
 }
 
-func (c *PassRecoveryController) UpdatePassword(ctx context.Context, pass *auth.PasswordPayload) (*auth.Empty, error) {
+func (c *PassRecoveryController) UpdatePassword(ctx context.Context, pass *auth.PasswordPayload) (*general.Empty, error) {
 	err := c.service.UpdatePassword(int(pass.Id), pass.Password)
 	if err != nil {
 		logrus.Error(err)
@@ -63,5 +64,5 @@ func (c *PassRecoveryController) UpdatePassword(ctx context.Context, pass *auth.
 		return nil, pkg.NewRpcError(fail.Error(), fail.Code())
 	}
 
-	return &auth.Empty{}, nil
+	return &general.Empty{}, nil
 }

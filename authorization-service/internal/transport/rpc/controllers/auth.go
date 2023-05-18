@@ -5,6 +5,7 @@ import (
 	"github.com/anton-uvarenko/cinema/authorization-service/internal/core/repo/entities"
 	"github.com/anton-uvarenko/cinema/authorization-service/internal/pkg"
 	"github.com/anton-uvarenko/cinema/authorization-service/protobufs/auth"
+	"github.com/anton-uvarenko/cinema/authorization-service/protobufs/general"
 	"github.com/go-playground/validator"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -26,7 +27,7 @@ type iAuthService interface {
 	SignUp(user *entities.User) (string, error)
 }
 
-func (c *AuthController) SignIn(ctx context.Context, payload *auth.SignInPayload) (*auth.JwtResponse, error) {
+func (c *AuthController) SignIn(ctx context.Context, payload *auth.SignInPayload) (*general.JwtResponse, error) {
 	user := &entities.User{
 		Email:    payload.Email,
 		Password: payload.Password,
@@ -38,12 +39,12 @@ func (c *AuthController) SignIn(ctx context.Context, payload *auth.SignInPayload
 		return nil, pkg.NewRpcError(fail.Error(), fail.Code())
 	}
 
-	return &auth.JwtResponse{
+	return &general.JwtResponse{
 		Jwt: token,
 	}, nil
 }
 
-func (c *AuthController) SignUp(ctx context.Context, payload *auth.SignUpPayload) (*auth.JwtResponse, error) {
+func (c *AuthController) SignUp(ctx context.Context, payload *auth.SignUpPayload) (*general.JwtResponse, error) {
 	user := &entities.User{
 		Email:    payload.Email,
 		Username: payload.Username,
@@ -70,7 +71,7 @@ func (c *AuthController) SignUp(ctx context.Context, payload *auth.SignUpPayload
 		return nil, pkg.NewRpcError(fail.Error(), fail.Code())
 	}
 
-	return &auth.JwtResponse{
+	return &general.JwtResponse{
 		Jwt: token,
 	}, nil
 }
