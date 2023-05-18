@@ -196,6 +196,20 @@ func (r *Router) InitRoutes() http.Handler {
 		})
 	})
 
+	app.Route("/comment", func(router chi.Router) {
+		mid := md.AuthMiddleware{
+			Recovery: false,
+			UserType: []core.UserType{
+				core.Admin,
+				core.Basic,
+				core.Premium,
+			},
+		}
+		router.Use(mid.TokenVerify)
+
+		router.Post("/", r.controllers.CommentsController.AddComment)
+	})
+
 	return app
 }
 

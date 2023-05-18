@@ -12,6 +12,7 @@ type Controllers struct {
 	PassRecoveryController *controllers.PassRecoveryController
 	FilmsController        *controllers.FilmController
 	SocialController       *controllers.SocialAuthController
+	CommentsController     *controllers.CommentController
 }
 
 func NewControllers(clients grpc.AuthClients, httpClient *http.Client) *Controllers {
@@ -21,5 +22,6 @@ func NewControllers(clients grpc.AuthClients, httpClient *http.Client) *Controll
 		PassRecoveryController: controllers.NewPassRecoveryController(clients.PassRecoveryClient),
 		FilmsController:        controllers.NewFilmController(httpClient),
 		SocialController:       controllers.NewSocialAuthController(clients.SocialClient),
+		CommentsController:     controllers.NewCommentController(clients.CommentsClient),
 	}
 }

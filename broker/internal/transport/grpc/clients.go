@@ -2,6 +2,7 @@ package grpc
 
 import (
 	"github.com/anton-uvarenko/cinema/broker-service/protobufs/auth"
+	"github.com/anton-uvarenko/cinema/broker-service/protobufs/users"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -17,6 +18,7 @@ type AuthClients struct {
 	VerificationClient auth.VerificationClient
 	PassRecoveryClient auth.PassVerifyClient
 	SocialClient       auth.SocialAuthClient
+	CommentsClient     users.CommentsClient
 }
 
 func ConnectAuthServer() AuthClients {
@@ -40,6 +42,7 @@ func ConnectAuthServer() AuthClients {
 		VerificationClient: auth.NewVerificationClient(conn),
 		PassRecoveryClient: auth.NewPassVerifyClient(conn),
 		SocialClient:       auth.NewSocialAuthClient(conn),
+		CommentsClient:     users.NewCommentsClient(conn),
 	}
 
 	return clients
