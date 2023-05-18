@@ -7,6 +7,7 @@
 package auth
 
 import (
+	general "github.com/anton-uvarenko/cinema/broker-service/protobufs/general"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -164,7 +165,7 @@ var file_verification_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_verification_proto_goTypes = []interface{}{
 	(*VerificationPayload)(nil), // 0: auth.VerificationPayload
 	(*IdPayload)(nil),           // 1: auth.IdPayload
-	(*Empty)(nil),               // 2: general.Empty
+	(*general.Empty)(nil),       // 2: general.Empty
 }
 var file_verification_proto_depIdxs = []int32{
 	1, // 0: auth.Verification.SendCode:input_type -> auth.IdPayload
@@ -183,7 +184,6 @@ func file_verification_proto_init() {
 	if File_verification_proto != nil {
 		return
 	}
-	file_general_proto_init()
 	if !protoimpl.UnsafeEnabled {
 		file_verification_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*VerificationPayload); i {

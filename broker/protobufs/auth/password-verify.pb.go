@@ -7,6 +7,7 @@
 package auth
 
 import (
+	general "github.com/anton-uvarenko/cinema/broker-service/protobufs/general"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -226,11 +227,11 @@ func file_password_verify_proto_rawDescGZIP() []byte {
 
 var file_password_verify_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_password_verify_proto_goTypes = []interface{}{
-	(*EmailPayload)(nil),    // 0: auth.EmailPayload
-	(*CodePayload)(nil),     // 1: auth.CodePayload
-	(*PasswordPayload)(nil), // 2: auth.PasswordPayload
-	(*Empty)(nil),           // 3: general.Empty
-	(*JwtResponse)(nil),     // 4: general.JwtResponse
+	(*EmailPayload)(nil),        // 0: auth.EmailPayload
+	(*CodePayload)(nil),         // 1: auth.CodePayload
+	(*PasswordPayload)(nil),     // 2: auth.PasswordPayload
+	(*general.Empty)(nil),       // 3: general.Empty
+	(*general.JwtResponse)(nil), // 4: general.JwtResponse
 }
 var file_password_verify_proto_depIdxs = []int32{
 	0, // 0: auth.PassVerify.SendRecoveryCode:input_type -> auth.EmailPayload
@@ -251,7 +252,6 @@ func file_password_verify_proto_init() {
 	if File_password_verify_proto != nil {
 		return
 	}
-	file_general_proto_init()
 	if !protoimpl.UnsafeEnabled {
 		file_password_verify_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*EmailPayload); i {

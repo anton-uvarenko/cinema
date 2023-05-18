@@ -8,6 +8,7 @@ package auth
 
 import (
 	context "context"
+	general "github.com/anton-uvarenko/cinema/broker-service/protobufs/general"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -22,9 +23,9 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type PassVerifyClient interface {
-	SendRecoveryCode(ctx context.Context, in *EmailPayload, opts ...grpc.CallOption) (*Empty, error)
-	VerifyRecoveryCode(ctx context.Context, in *CodePayload, opts ...grpc.CallOption) (*JwtResponse, error)
-	UpdatePassword(ctx context.Context, in *PasswordPayload, opts ...grpc.CallOption) (*Empty, error)
+	SendRecoveryCode(ctx context.Context, in *EmailPayload, opts ...grpc.CallOption) (*general.Empty, error)
+	VerifyRecoveryCode(ctx context.Context, in *CodePayload, opts ...grpc.CallOption) (*general.JwtResponse, error)
+	UpdatePassword(ctx context.Context, in *PasswordPayload, opts ...grpc.CallOption) (*general.Empty, error)
 }
 
 type passVerifyClient struct {
@@ -35,8 +36,8 @@ func NewPassVerifyClient(cc grpc.ClientConnInterface) PassVerifyClient {
 	return &passVerifyClient{cc}
 }
 
-func (c *passVerifyClient) SendRecoveryCode(ctx context.Context, in *EmailPayload, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
+func (c *passVerifyClient) SendRecoveryCode(ctx context.Context, in *EmailPayload, opts ...grpc.CallOption) (*general.Empty, error) {
+	out := new(general.Empty)
 	err := c.cc.Invoke(ctx, "/auth.PassVerify/SendRecoveryCode", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -44,8 +45,8 @@ func (c *passVerifyClient) SendRecoveryCode(ctx context.Context, in *EmailPayloa
 	return out, nil
 }
 
-func (c *passVerifyClient) VerifyRecoveryCode(ctx context.Context, in *CodePayload, opts ...grpc.CallOption) (*JwtResponse, error) {
-	out := new(JwtResponse)
+func (c *passVerifyClient) VerifyRecoveryCode(ctx context.Context, in *CodePayload, opts ...grpc.CallOption) (*general.JwtResponse, error) {
+	out := new(general.JwtResponse)
 	err := c.cc.Invoke(ctx, "/auth.PassVerify/VerifyRecoveryCode", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -53,8 +54,8 @@ func (c *passVerifyClient) VerifyRecoveryCode(ctx context.Context, in *CodePaylo
 	return out, nil
 }
 
-func (c *passVerifyClient) UpdatePassword(ctx context.Context, in *PasswordPayload, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
+func (c *passVerifyClient) UpdatePassword(ctx context.Context, in *PasswordPayload, opts ...grpc.CallOption) (*general.Empty, error) {
+	out := new(general.Empty)
 	err := c.cc.Invoke(ctx, "/auth.PassVerify/UpdatePassword", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -66,9 +67,9 @@ func (c *passVerifyClient) UpdatePassword(ctx context.Context, in *PasswordPaylo
 // All implementations must embed UnimplementedPassVerifyServer
 // for forward compatibility
 type PassVerifyServer interface {
-	SendRecoveryCode(context.Context, *EmailPayload) (*Empty, error)
-	VerifyRecoveryCode(context.Context, *CodePayload) (*JwtResponse, error)
-	UpdatePassword(context.Context, *PasswordPayload) (*Empty, error)
+	SendRecoveryCode(context.Context, *EmailPayload) (*general.Empty, error)
+	VerifyRecoveryCode(context.Context, *CodePayload) (*general.JwtResponse, error)
+	UpdatePassword(context.Context, *PasswordPayload) (*general.Empty, error)
 	mustEmbedUnimplementedPassVerifyServer()
 }
 
@@ -76,13 +77,13 @@ type PassVerifyServer interface {
 type UnimplementedPassVerifyServer struct {
 }
 
-func (UnimplementedPassVerifyServer) SendRecoveryCode(context.Context, *EmailPayload) (*Empty, error) {
+func (UnimplementedPassVerifyServer) SendRecoveryCode(context.Context, *EmailPayload) (*general.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendRecoveryCode not implemented")
 }
-func (UnimplementedPassVerifyServer) VerifyRecoveryCode(context.Context, *CodePayload) (*JwtResponse, error) {
+func (UnimplementedPassVerifyServer) VerifyRecoveryCode(context.Context, *CodePayload) (*general.JwtResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyRecoveryCode not implemented")
 }
-func (UnimplementedPassVerifyServer) UpdatePassword(context.Context, *PasswordPayload) (*Empty, error) {
+func (UnimplementedPassVerifyServer) UpdatePassword(context.Context, *PasswordPayload) (*general.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdatePassword not implemented")
 }
 func (UnimplementedPassVerifyServer) mustEmbedUnimplementedPassVerifyServer() {}

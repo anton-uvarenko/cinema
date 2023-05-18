@@ -1,8 +1,8 @@
-enerate() {
+generate() {
   mkdir ../../$1/protobufs
-  mkdir ../../$1/protobufs/auth
-  protoc --go_opt=paths=source_relative --go_out=../../$1/protobufs/auth \
-          --go-grpc_out=../../$1/protobufs/auth --go-grpc_opt=paths=source_relative \
+  mkdir ../../$1/protobufs/general
+  protoc --go_opt=paths=source_relative --go_out=../../$1/protobufs/general \
+          --go-grpc_out=../../$1/protobufs/general --go-grpc_opt=paths=source_relative \
            *.proto
 }
 
@@ -14,8 +14,9 @@ if [[ -z "$service" ]]; then
 fi
 
 if [[ $service == "all" ]]; then
-  for s in "broker" "authorization-service"
+  for s in "broker" "authorization-service" "user-service"
   do
+    echo $s;
     generate ${s};
   done
 else
