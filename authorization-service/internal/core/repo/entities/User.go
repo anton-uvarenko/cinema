@@ -67,7 +67,7 @@ func (r *UserRepo) AddUser(user *User) (*User, error) {
 	        :is_verified,
 	        :verification_code)
 `
-	rows, err := r.db.NamedQueryContext(
+	_, err := r.db.NamedExecContext(
 		ctx,
 		query,
 		user,
@@ -78,16 +78,13 @@ func (r *UserRepo) AddUser(user *User) (*User, error) {
 		return nil, err
 	}
 
-	rowUser := &User{}
-	for rows.Next() {
-		err = rows.StructScan(rowUser)
-	}
+	u, err := r.GetUserByEmail(user.Email)
 	if err != nil {
 		logrus.Error(err.Error())
 		return nil, err
 	}
 
-	return rowUser, err
+	return u, err
 }
 
 func (r *UserRepo) GetUserById(id int) (*User, error) {
