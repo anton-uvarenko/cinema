@@ -3,7 +3,7 @@ generate() {
   mkdir ../../$1/protobufs/users
   protoc --go_opt=paths=source_relative --go_out=../../$1/protobufs/users \
           --go-grpc_out=../../$1/protobufs/users --go-grpc_opt=paths=source_relative \
-          --proto_path=./general \
+          --proto_path=../general \
           --proto_path=. \
           ../general/*.proto \
            *.proto

@@ -37,5 +37,5 @@ message LikeCommentPayload {
 service Comments {
   rpc AddComment(CommentPayload) returns (Comment);
   rpc GetComments(general.Empty) returns (CommentsResponse);
-  rpc LikeComment(LikeCommentPayload) returns (genral.Empty);
+  rpc LikeComment(LikeCommentPayload) returns (general.Empty);
 }
