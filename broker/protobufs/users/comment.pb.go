@@ -7,7 +7,6 @@
 package users
 
 import (
-	users "github.com/anton-uvarenko/cinema/users-service/protobufs/users"
 	timestamp "github.com/golang/protobuf/ptypes/timestamp"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -395,7 +394,7 @@ var file_comment_proto_goTypes = []interface{}{
 	(*CommentPayload)(nil),      // 2: users.CommentPayload
 	(*LikeCommentPayload)(nil),  // 3: users.LikeCommentPayload
 	(*timestamp.Timestamp)(nil), // 4: google.protobuf.Timestamp
-	(*users.Empty)(nil),         // 5: general.Empty
+	(*Empty)(nil),               // 5: general.Empty
 }
 var file_comment_proto_depIdxs = []int32{
 	4, // 0: users.Comment.CreatedAt:type_name -> google.protobuf.Timestamp
@@ -419,6 +418,7 @@ func file_comment_proto_init() {
 	if File_comment_proto != nil {
 		return
 	}
+	file_general_proto_init()
 	if !protoimpl.UnsafeEnabled {
 		file_comment_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Comment); i {
