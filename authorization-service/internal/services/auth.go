@@ -46,7 +46,7 @@ func (s *AuthService) SignIn(user *entities.User) (string, error) {
 	}
 
 	//create token
-	token, err := pkg.NewJwt(dbUser.Id, dbUser.UserType, false)
+	token, err := pkg.NewJwt(dbUser.Id, dbUser.UserType, false, dbUser.IsVerified)
 	if err != nil {
 		return "", pkg.NewError("error occurred while creating jwt token", http.StatusInternalServerError)
 	}
@@ -76,7 +76,7 @@ func (s *AuthService) SignUp(user *entities.User) (string, error) {
 		return "", pkg.NewError("error creating user", http.StatusInternalServerError)
 	}
 
-	token, err := pkg.NewJwt(dbUser.Id, dbUser.UserType, false)
+	token, err := pkg.NewJwt(dbUser.Id, dbUser.UserType, false, false)
 	if err != nil {
 		return "", pkg.NewError("error creating jwt", http.StatusInternalServerError)
 	}
