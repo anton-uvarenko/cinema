@@ -7,6 +7,7 @@ import (
 	"github.com/anton-uvarenko/cinema/broker-service/protobufs/users"
 	"github.com/sirupsen/logrus"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -28,6 +29,9 @@ func (c *CommentController) AddComment(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+
+	id, _ := pkg.ParseWithId(strings.Split(r.Header.Get("Authorization"), " ")[1])
+	payload.UserId = int32(id)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()

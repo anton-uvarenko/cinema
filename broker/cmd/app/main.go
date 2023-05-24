@@ -10,7 +10,7 @@ import (
 
 func main() {
 	logrus.Info("connecting to auth")
-	clients := grpc.ConnectAuthServer()
+	clients := grpc.ConnectAllClients()
 	httpClient := &netHttp.Client{}
 
 	c := http.NewControllers(clients, httpClient)

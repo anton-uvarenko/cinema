@@ -15,13 +15,13 @@ type Controllers struct {
 	CommentsController     *controllers.CommentController
 }
 
-func NewControllers(clients grpc.AuthClients, httpClient *http.Client) *Controllers {
+func NewControllers(clients *grpc.AllClients, httpClient *http.Client) *Controllers {
 	return &Controllers{
-		AuthController:         controllers.NewAuthController(clients.AuthClient),
-		VerificationController: controllers.NewVerificationController(clients.VerificationClient),
-		PassRecoveryController: controllers.NewPassRecoveryController(clients.PassRecoveryClient),
+		AuthController:         controllers.NewAuthController(clients.AuthClients.AuthClient),
+		VerificationController: controllers.NewVerificationController(clients.AuthClients.VerificationClient),
+		PassRecoveryController: controllers.NewPassRecoveryController(clients.AuthClients.PassRecoveryClient),
 		FilmsController:        controllers.NewFilmController(httpClient),
-		SocialController:       controllers.NewSocialAuthController(clients.SocialClient),
-		CommentsController:     controllers.NewCommentController(clients.CommentsClient),
+		SocialController:       controllers.NewSocialAuthController(clients.AuthClients.SocialClient),
+		CommentsController:     controllers.NewCommentController(clients.UserClients.CommentsClient),
 	}
 }

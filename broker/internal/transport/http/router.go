@@ -146,7 +146,7 @@ func (r *Router) InitRoutes() http.Handler {
 
 			rt.Post("/", r.controllers.FilmsController.RedirectRequest)
 			rt.Put("/{id}/update", r.controllers.FilmsController.RedirectRequest)
-			rt.Delete("/{id}/update", r.controllers.FilmsController.RedirectRequest)
+			rt.Delete("/{id}/delete", r.controllers.FilmsController.RedirectRequest)
 		})
 
 		router.Group(func(rt chi.Router) {
@@ -176,7 +176,7 @@ func (r *Router) InitRoutes() http.Handler {
 			rt.Use(mid.TokenVerify)
 
 			rt.Post("/", r.controllers.FilmsController.RedirectRequest)
-			rt.Put("/{id/update}", r.controllers.FilmsController.RedirectRequest)
+			rt.Put("/{id}/update", r.controllers.FilmsController.RedirectRequest)
 			rt.Delete("/{id}/delete", r.controllers.FilmsController.RedirectRequest)
 		})
 
