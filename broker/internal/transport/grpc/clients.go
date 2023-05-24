@@ -18,10 +18,9 @@ type AuthClients struct {
 	VerificationClient auth.VerificationClient
 	PassRecoveryClient auth.PassVerifyClient
 	SocialClient       auth.SocialAuthClient
-	CommentsClient     users.CommentsClient
 }
 
-func ConnectAuthServer() AuthClients {
+func connectAuthServer() AuthClients {
 	logrus.Info("auth dns name is: ", os.Getenv("DNS_AUTH"))
 	conn, err := grpc.Dial(
 		os.Getenv("DNS_AUTH")+":5000",
@@ -42,8 +41,46 @@ func ConnectAuthServer() AuthClients {
 		VerificationClient: auth.NewVerificationClient(conn),
 		PassRecoveryClient: auth.NewPassVerifyClient(conn),
 		SocialClient:       auth.NewSocialAuthClient(conn),
-		CommentsClient:     users.NewCommentsClient(conn),
 	}
 
 	return clients
+}
+
+type UserCilents struct {
+	CommentsClient users.CommentsClient
+}
+
+func connectUsersServer() UserCilents {
+	logrus.Info("auth dns name is: ", os.Getenv("DNS_COMMENTS"))
+	conn, err := grpc.Dial(
+		os.Getenv("DNS_COMMENTS")+":5000",
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithBlock(),
+	)
+	if err != nil {
+		logrus.Error(err)
+		panic(err)
+	}
+
+	logrus.Info(conn.GetState())
+
+	logrus.Info("connected to auth")
+
+	clients := UserCilents{
+		CommentsClient: users.NewCommentsClient(conn),
+	}
+
+	return clients
+}
+
+type AllClients struct {
+	AuthClients AuthClients
+	UserClients UserCilents
+}
+
+func ConnectAllClients() *AllClients {
+	return &AllClients{
+		AuthClients: connectAuthServer(),
+		UserClients: connectUsersServer(),
+	}
 }

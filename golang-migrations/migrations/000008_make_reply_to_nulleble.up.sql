@@ -1,0 +1,2 @@
+ALTER TABLE comments
+ALTER COLUMN reply_to SET DEFAULT NULL;

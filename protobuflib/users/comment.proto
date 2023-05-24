@@ -23,7 +23,7 @@ message CommentsResponse {
 
 message CommentPayload {
   int32 FilmId = 1;
-  int32 Text = 2;
+  string Text = 2;
   int32 UserId = 3;
   int32 ReplyTo = 4;
   string CommentType = 6;
@@ -34,8 +34,30 @@ message LikeCommentPayload {
   int32 UserId = 2;
 }
 
+message GetPrivateCommentsPayload {
+  int32 UserId = 1;
+  int32 FilmId = 2;
+  int32 Page = 3;
+  int32 Amount = 4;
+}
+
+message GetPublicCommentsPayload {
+  int32 FilmId = 1;
+  int32 Page = 2;
+  int32 Amount = 3;
+  int32 ResponsesAmount = 4;
+}
+
+message GetResponsesToCommentPaylaod {
+  int32 CommentId = 1;
+  int32 Page = 2;
+  int32 Amount = 3;
+}
+
 service Comments {
   rpc AddComment(CommentPayload) returns (Comment);
-  rpc GetComments(general.Empty) returns (CommentsResponse);
+  rpc GetPublicComments(GetPublicCommentsPayload) returns (CommentsResponse);
+  rpc GetPrivateComments(GetPrivateCommentsPayload) returns (CommentsResponse);
+  rpc GetResponsesToComment(GetResponsesToCommentPaylaod) returns (CommentsResponse);
   rpc LikeComment(LikeCommentPayload) returns (general.Empty);
 }
