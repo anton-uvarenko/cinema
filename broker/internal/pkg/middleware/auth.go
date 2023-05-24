@@ -8,8 +8,9 @@ import (
 )
 
 type AuthMiddleware struct {
-	UserType []core.UserType
-	Recovery bool
+	UserType     []core.UserType
+	Recovery     bool
+	Verification bool
 }
 
 func (m AuthMiddleware) TokenVerify(next http.Handler) http.Handler {
@@ -27,7 +28,7 @@ func (m AuthMiddleware) TokenVerify(next http.Handler) http.Handler {
 			return
 		}
 
-		err := pkg.Verify(token[1], m.UserType, m.Recovery)
+		err := pkg.Verify(token[1], m.UserType, m.Recovery, m.Verification)
 
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusForbidden)
