@@ -44,7 +44,7 @@ func Verify(token string, userType []core.UserType, recovery bool, verification 
 			return nil, ErrorInvalidToken
 		}
 
-		if claims["isVerified"] != verification {
+		if claims["isVerified"] != verification && claims["isVerified"] != true {
 			return nil, ErrorInvalidToken
 		}
 
