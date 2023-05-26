@@ -180,6 +180,7 @@ func (r *Router) InitRoutes() http.Handler {
 				UserType: []core.UserType{
 					core.Admin,
 				},
+				Verification: true,
 			}
 			rt.Use(mid.TokenVerify)
 
@@ -196,6 +197,7 @@ func (r *Router) InitRoutes() http.Handler {
 					core.Basic,
 					core.Premium,
 				},
+				Verification: true,
 			}
 			rt.Use(mid.TokenVerify)
 
