@@ -47,6 +47,7 @@ func (r *Router) InitRoutes() http.Handler {
 				core.Basic,
 				core.Admin,
 			},
+			Verification: false,
 		}
 		router.Use(mid.TokenVerify)
 		router.Get("/send", r.controllers.VerificationController.SendCode)
@@ -65,6 +66,7 @@ func (r *Router) InitRoutes() http.Handler {
 					core.Basic,
 					core.Admin,
 				},
+				Verification: false,
 			}
 			rout.Use(mid.TokenVerify)
 			rout.Post("/change", r.controllers.PassRecoveryController.UpdatePassword)
@@ -78,6 +80,7 @@ func (r *Router) InitRoutes() http.Handler {
 				UserType: []core.UserType{
 					core.Admin,
 				},
+				Verification: true,
 			}
 			rt.Use(mid.TokenVerify)
 
@@ -95,6 +98,7 @@ func (r *Router) InitRoutes() http.Handler {
 					core.Basic,
 					core.Premium,
 				},
+				Verification: true,
 			}
 			rt.Use(mid.TokenVerify)
 
@@ -110,6 +114,7 @@ func (r *Router) InitRoutes() http.Handler {
 				UserType: []core.UserType{
 					core.Admin,
 				},
+				Verification: true,
 			}
 			rt.Use(mid.TokenVerify)
 
@@ -126,6 +131,7 @@ func (r *Router) InitRoutes() http.Handler {
 					core.Basic,
 					core.Premium,
 				},
+				Verification: true,
 			}
 			rt.Use(mid.TokenVerify)
 
@@ -141,6 +147,7 @@ func (r *Router) InitRoutes() http.Handler {
 				UserType: []core.UserType{
 					core.Admin,
 				},
+				Verification: true,
 			}
 			rt.Use(mid.TokenVerify)
 
@@ -157,6 +164,7 @@ func (r *Router) InitRoutes() http.Handler {
 					core.Basic,
 					core.Premium,
 				},
+				Verification: true,
 			}
 			rt.Use(mid.TokenVerify)
 
@@ -172,6 +180,7 @@ func (r *Router) InitRoutes() http.Handler {
 				UserType: []core.UserType{
 					core.Admin,
 				},
+				Verification: true,
 			}
 			rt.Use(mid.TokenVerify)
 
@@ -188,6 +197,7 @@ func (r *Router) InitRoutes() http.Handler {
 					core.Basic,
 					core.Premium,
 				},
+				Verification: true,
 			}
 			rt.Use(mid.TokenVerify)
 

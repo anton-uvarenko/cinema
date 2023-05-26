@@ -45,7 +45,7 @@ func (c *PassRecoveryController) VerifyRecoveryCode(ctx context.Context, code *a
 		return nil, pkg.NewRpcError(fail.Error(), fail.Code())
 	}
 
-	token, err := pkg.NewJwt(user.Id, user.UserType, true)
+	token, err := pkg.NewJwt(user.Id, user.UserType, true, user.IsVerified)
 	if err != nil {
 		logrus.Error(err)
 		return nil, pkg.NewRpcError("error creating jwt", http.StatusInternalServerError)
