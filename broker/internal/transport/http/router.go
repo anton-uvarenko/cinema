@@ -220,7 +220,9 @@ func (r *Router) InitRoutes() http.Handler {
 		}
 		router.Use(mid.TokenVerify)
 
-		router.Post("/", r.controllers.CommentsController.AddComment)
+		router.Post("/add", r.controllers.CommentsController.AddComment)
+		router.Get("/get-public", r.controllers.CommentsController.GetPublicComments)
+		router.Get("/get-private", r.controllers.CommentsController.GetPrivateComments)
 	})
 
 	app.Route("/user-data", func(router chi.Router) {

@@ -24,6 +24,7 @@ func NewUserDataController(client users.UserDataUploaderClient) *UserDataControl
 
 func (c *UserDataController) AddData(w http.ResponseWriter, r *http.Request) {
 	id, _ := pkg.ParseWithId(strings.Split(r.Header.Get("Authorization"), " ")[1])
+	userName, _ := pkg.ParseWithUsername(strings.Split(r.Header.Get("Authorization"), " ")[1])
 
 	favActor, _ := strconv.Atoi(r.FormValue("fav-actor"))
 	favGenre, _ := strconv.Atoi(r.FormValue("fav-genre"))
@@ -50,6 +51,7 @@ func (c *UserDataController) AddData(w http.ResponseWriter, r *http.Request) {
 			FavGenre: int32(favGenre),
 			FavFilm:  int32(favFilm),
 			UserId:   int32(id),
+			//Username:
 		})
 		if err != nil {
 			logrus.Error(err)
@@ -98,6 +100,7 @@ func (c *UserDataController) AddData(w http.ResponseWriter, r *http.Request) {
 			FavGenre: int32(favGenre),
 			FavFilm:  int32(favFilm),
 			UserId:   int32(id),
+			Username: userName,
 		})
 		if err != nil {
 			logrus.Error(err)
