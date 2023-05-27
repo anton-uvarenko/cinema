@@ -46,11 +46,12 @@ func connectAuthServer() AuthClients {
 	return clients
 }
 
-type UserCilents struct {
-	CommentsClient users.CommentsClient
+type UserClients struct {
+	CommentsClient  users.CommentsClient
+	UserDataClients users.UserDataUploaderClient
 }
 
-func connectUsersServer() UserCilents {
+func connectUsersServer() UserClients {
 	logrus.Info("auth dns name is: ", os.Getenv("DNS_COMMENTS"))
 	conn, err := grpc.Dial(
 		os.Getenv("DNS_COMMENTS")+":5000",
@@ -66,8 +67,9 @@ func connectUsersServer() UserCilents {
 
 	logrus.Info("connected to auth")
 
-	clients := UserCilents{
-		CommentsClient: users.NewCommentsClient(conn),
+	clients := UserClients{
+		CommentsClient:  users.NewCommentsClient(conn),
+		UserDataClients: users.NewUserDataUploaderClient(conn),
 	}
 
 	return clients
@@ -75,7 +77,7 @@ func connectUsersServer() UserCilents {
 
 type AllClients struct {
 	AuthClients AuthClients
-	UserClients UserCilents
+	UserClients UserClients
 }
 
 func ConnectAllClients() *AllClients {

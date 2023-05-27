@@ -4,8 +4,13 @@ build-broker:
 	@echo "Done!"
 
 build-auth:
-	@echo "Building broker binary"
+	@echo "Building auth binary"
 	cd ./authorization-service && env GOOS=linux CGO_ENABLED=0 go build -o authApp ./cmd/app
+	@echo "Done!"
+
+build-users:
+	@echo "Building users binary"
+	cd ./user-service && env GOOS=linux CGO_ENABLED=0 go build -o userApp ./cmd/app
 	@echo "Done!"
 
 dbuild-broker: build-broker
@@ -17,6 +22,11 @@ dbuild-auth: build-auth
 	@echo "Building broker production dockerfile"
 	cd ./authorization-service && docker build -f authorization-service.production.dockerfile -t uvarenko/cinotes-auth:test .
 	docker push uvarenko/cinotes-auth:test
+
+dbuild-users: build-users
+	@echo "Building users production dockerfile"
+	cd ./user-service && docker build -f user-service.production.dockerfile -t uvarenko/cinotes-user:test .
+	docker push uvarenko/cinotes-user:test
 
 start:
 	docker compose up -d

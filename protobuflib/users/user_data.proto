@@ -1,0 +1,36 @@
+syntax = "proto3";
+package users;
+
+import "general.proto";
+option go_package = "github.com/anton-uvarenko/cinema/user-service/protobufs/users";
+
+message UploadDataPayload {
+  bytes Image = 1;
+  int32 FavActor = 2;
+  int32 FavGenre = 3;
+  int32 FavFilm = 4;
+  int32 UserId = 5;
+}
+
+message GetDataResponse {
+  string ImageLink = 1;
+  int32 FavActor = 2;
+  int32 FavGenre = 3;
+  int32 FavFilm = 4;
+  int32 UserId = 5;
+}
+
+message DeleteDataPayload {
+  int32 UserId = 1;
+}
+
+message GetDataPayload {
+  int32 UserId = 1;
+}
+
+service UserDataUploader {
+  rpc UploadData (stream UploadDataPayload) returns (general.Empty);
+  rpc GetData (GetDataPayload) returns (GetDataResponse);
+  rpc UpdateData(stream UploadDataPayload) returns (general.Empty);
+  rpc DeleteData(DeleteDataPayload) returns (general.Empty);
+}

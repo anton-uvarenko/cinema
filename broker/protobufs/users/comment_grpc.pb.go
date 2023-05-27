@@ -24,7 +24,9 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CommentsClient interface {
 	AddComment(ctx context.Context, in *CommentPayload, opts ...grpc.CallOption) (*Comment, error)
-	GetComments(ctx context.Context, in *general.Empty, opts ...grpc.CallOption) (*CommentsResponse, error)
+	GetPublicComments(ctx context.Context, in *GetPublicCommentsPayload, opts ...grpc.CallOption) (*CommentsResponse, error)
+	GetPrivateComments(ctx context.Context, in *GetPrivateCommentsPayload, opts ...grpc.CallOption) (*CommentsResponse, error)
+	GetResponsesToComment(ctx context.Context, in *GetResponsesToCommentPaylaod, opts ...grpc.CallOption) (*CommentsResponse, error)
 	LikeComment(ctx context.Context, in *LikeCommentPayload, opts ...grpc.CallOption) (*general.Empty, error)
 }
 
@@ -45,9 +47,27 @@ func (c *commentsClient) AddComment(ctx context.Context, in *CommentPayload, opt
 	return out, nil
 }
 
-func (c *commentsClient) GetComments(ctx context.Context, in *general.Empty, opts ...grpc.CallOption) (*CommentsResponse, error) {
+func (c *commentsClient) GetPublicComments(ctx context.Context, in *GetPublicCommentsPayload, opts ...grpc.CallOption) (*CommentsResponse, error) {
 	out := new(CommentsResponse)
-	err := c.cc.Invoke(ctx, "/users.Comments/GetComments", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/users.Comments/GetPublicComments", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *commentsClient) GetPrivateComments(ctx context.Context, in *GetPrivateCommentsPayload, opts ...grpc.CallOption) (*CommentsResponse, error) {
+	out := new(CommentsResponse)
+	err := c.cc.Invoke(ctx, "/users.Comments/GetPrivateComments", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *commentsClient) GetResponsesToComment(ctx context.Context, in *GetResponsesToCommentPaylaod, opts ...grpc.CallOption) (*CommentsResponse, error) {
+	out := new(CommentsResponse)
+	err := c.cc.Invoke(ctx, "/users.Comments/GetResponsesToComment", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +88,9 @@ func (c *commentsClient) LikeComment(ctx context.Context, in *LikeCommentPayload
 // for forward compatibility
 type CommentsServer interface {
 	AddComment(context.Context, *CommentPayload) (*Comment, error)
-	GetComments(context.Context, *general.Empty) (*CommentsResponse, error)
+	GetPublicComments(context.Context, *GetPublicCommentsPayload) (*CommentsResponse, error)
+	GetPrivateComments(context.Context, *GetPrivateCommentsPayload) (*CommentsResponse, error)
+	GetResponsesToComment(context.Context, *GetResponsesToCommentPaylaod) (*CommentsResponse, error)
 	LikeComment(context.Context, *LikeCommentPayload) (*general.Empty, error)
 	mustEmbedUnimplementedCommentsServer()
 }
@@ -80,8 +102,14 @@ type UnimplementedCommentsServer struct {
 func (UnimplementedCommentsServer) AddComment(context.Context, *CommentPayload) (*Comment, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddComment not implemented")
 }
-func (UnimplementedCommentsServer) GetComments(context.Context, *general.Empty) (*CommentsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetComments not implemented")
+func (UnimplementedCommentsServer) GetPublicComments(context.Context, *GetPublicCommentsPayload) (*CommentsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPublicComments not implemented")
+}
+func (UnimplementedCommentsServer) GetPrivateComments(context.Context, *GetPrivateCommentsPayload) (*CommentsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPrivateComments not implemented")
+}
+func (UnimplementedCommentsServer) GetResponsesToComment(context.Context, *GetResponsesToCommentPaylaod) (*CommentsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetResponsesToComment not implemented")
 }
 func (UnimplementedCommentsServer) LikeComment(context.Context, *LikeCommentPayload) (*general.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LikeComment not implemented")
@@ -117,20 +145,56 @@ func _Comments_AddComment_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Comments_GetComments_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(general.Empty)
+func _Comments_GetPublicComments_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPublicCommentsPayload)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CommentsServer).GetComments(ctx, in)
+		return srv.(CommentsServer).GetPublicComments(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/users.Comments/GetComments",
+		FullMethod: "/users.Comments/GetPublicComments",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CommentsServer).GetComments(ctx, req.(*general.Empty))
+		return srv.(CommentsServer).GetPublicComments(ctx, req.(*GetPublicCommentsPayload))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Comments_GetPrivateComments_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPrivateCommentsPayload)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CommentsServer).GetPrivateComments(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/users.Comments/GetPrivateComments",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CommentsServer).GetPrivateComments(ctx, req.(*GetPrivateCommentsPayload))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Comments_GetResponsesToComment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetResponsesToCommentPaylaod)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CommentsServer).GetResponsesToComment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/users.Comments/GetResponsesToComment",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CommentsServer).GetResponsesToComment(ctx, req.(*GetResponsesToCommentPaylaod))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -165,8 +229,16 @@ var Comments_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Comments_AddComment_Handler,
 		},
 		{
-			MethodName: "GetComments",
-			Handler:    _Comments_GetComments_Handler,
+			MethodName: "GetPublicComments",
+			Handler:    _Comments_GetPublicComments_Handler,
+		},
+		{
+			MethodName: "GetPrivateComments",
+			Handler:    _Comments_GetPrivateComments_Handler,
+		},
+		{
+			MethodName: "GetResponsesToComment",
+			Handler:    _Comments_GetResponsesToComment_Handler,
 		},
 		{
 			MethodName: "LikeComment",

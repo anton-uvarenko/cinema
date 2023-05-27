@@ -216,10 +216,27 @@ func (r *Router) InitRoutes() http.Handler {
 				core.Basic,
 				core.Premium,
 			},
+			Verification: &verified,
 		}
 		router.Use(mid.TokenVerify)
 
 		router.Post("/", r.controllers.CommentsController.AddComment)
+	})
+
+	app.Route("/user-data", func(router chi.Router) {
+		mid := md.AuthMiddleware{
+			Recovery: false,
+			UserType: []core.UserType{
+				core.Admin,
+				core.Basic,
+				core.Premium,
+			},
+			Verification: &verified,
+		}
+		router.Use(mid.TokenVerify)
+
+		router.Post("/add", r.controllers.UserDataController.AddData)
+		router.Get("/get", r.controllers.UserDataController.GetData)
 	})
 
 	return app

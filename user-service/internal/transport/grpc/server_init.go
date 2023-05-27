@@ -9,4 +9,5 @@ import (
 
 func SetUpServerControllers(server *grpc.Server, services *services.Service) {
 	users.RegisterCommentsServer(server, controllers.NewCommentController(services.CommentsService))
+	users.RegisterUserDataUploaderServer(server, controllers.NewUserDataController(services.UserDataService))
 }
