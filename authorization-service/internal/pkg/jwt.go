@@ -10,10 +10,12 @@ import (
 	"time"
 )
 
-func NewJwt(id int, userType entities.UserType, recovery bool, isVerified bool) (string, error) {
+func NewJwt(id int, email string, username string, userType entities.UserType, recovery bool, isVerified bool) (string, error) {
 	claims := jwt.MapClaims{
 		"exp":         time.Now().Add(time.Hour * 24 * 7).Unix(),
 		"id":          id,
+		"email":       email,
+		"username":    username,
 		"userType":    userType,
 		"ps-recovery": recovery,
 		"isVerified":  isVerified,

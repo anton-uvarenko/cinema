@@ -49,7 +49,7 @@ func (s *SocialAuthService) GoogleAuth(code string) (string, error) {
 		return "", pkg.NewError("db error", http.StatusInternalServerError)
 	}
 
-	jwt, err := pkg.NewJwt(user.Id, user.UserType, false, user.IsVerified)
+	jwt, err := pkg.NewJwt(user.Id, user.Email, user.Username, user.UserType, false, user.IsVerified)
 	if err != nil {
 		return "", pkg.NewError("couldn't create jwt", http.StatusInternalServerError)
 	}
@@ -78,7 +78,7 @@ func (s *SocialAuthService) FacebookAuth(code string) (string, error) {
 		return "", pkg.NewError("db error", http.StatusInternalServerError)
 	}
 
-	jwt, err := pkg.NewJwt(user.Id, user.UserType, false, user.IsVerified)
+	jwt, err := pkg.NewJwt(user.Id, user.Email, user.Username, user.UserType, false, user.IsVerified)
 	if err != nil {
 		return "", pkg.NewError("couldn't create jwt", http.StatusInternalServerError)
 	}
