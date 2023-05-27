@@ -31,7 +31,7 @@ func ParseWithId(tokenString string) (int, error) {
 	return userId, nil
 }
 
-func Verify(token string, userType []core.UserType, recovery bool, verification bool) error {
+func Verify(token string, userType []core.UserType, recovery bool, verification *bool) error {
 	_, err := jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
 		_, ok := t.Method.(*jwt.SigningMethodHMAC)
 		if !ok {
@@ -44,7 +44,7 @@ func Verify(token string, userType []core.UserType, recovery bool, verification 
 			return nil, ErrorInvalidToken
 		}
 
-		if claims["isVerified"] != verification {
+		if verification != nil && claims["isVerified"] != *verification {
 			return nil, ErrorInvalidToken
 		}
 
