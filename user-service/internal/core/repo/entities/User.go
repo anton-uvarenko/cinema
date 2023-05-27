@@ -4,11 +4,13 @@ import (
 	"context"
 	"errors"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 	"github.com/sirupsen/logrus"
 )
 
 type UserData struct {
 	Userid         int    `db:"user_id"`
+	UserName       string `db:"username"`
 	FavouriteGenre int    `db:"favourite_genre"`
 	FavouriteActor int    `db:"favourite_actor"`
 	FavouriteFilm  int    `db:"favourite_film"`
@@ -35,14 +37,16 @@ func (r *UserRepo) AddData(u *UserData) (*UserData, error) {
 	                       favourite_genre,
 	                       favourite_actor,
 	                       favourite_film,
-	                       avatar_name
+	                       avatar_name,
+	                       username
 	)
 	VALUES (
 	        $1,
 			$2,
 			$3,
 			$4,
-			$5
+			$5,
+	        $6
 	)
 	ON CONFLICT (user_id) DO UPDATE 
 	SET 
@@ -50,6 +54,7 @@ func (r *UserRepo) AddData(u *UserData) (*UserData, error) {
 		favourite_actor = $3,
 		favourite_film = $4,
 		avatar_name = $5
+		username = $6
 	RETURNING user_id
 `
 
@@ -62,6 +67,7 @@ func (r *UserRepo) AddData(u *UserData) (*UserData, error) {
 		u.FavouriteActor,
 		u.FavouriteFilm,
 		u.AvatarName,
+		u.UserName,
 	).Scan(&user_id)
 	if err != nil {
 		logrus.Error(err)
@@ -107,6 +113,33 @@ func (r *UserRepo) GetUserDataById(id int) (*UserData, error) {
 `
 	resp := &UserData{}
 	err := r.db.GetContext(ctx, resp, query, id)
+	if err != nil {
+		logrus.Error(err)
+		return nil, errors.New("error retrieving data from db: " + err.Error())
+	}
+
+	return resp, nil
+}
+
+func (r *UserRepo) GetUserDataByIds(ids []int) ([]UserData, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), DefaultExecTimeout)
+	defer cancel()
+
+	query := `
+	SELECT 
+	    user_id,
+		favourite_genre,
+		favourite_actor,
+		favourite_film,
+		avatar_name
+	FROM user_data
+	WHERE user_id = ANY($1)
+`
+
+	//params := make(map[string]interface{})
+	//params["ids"] = pq.Array(ids)
+	resp := []UserData{}
+	err := r.db.SelectContext(ctx, &resp, query, pq.Array(ids))
 	if err != nil {
 		logrus.Error(err)
 		return nil, errors.New("error retrieving data from db: " + err.Error())

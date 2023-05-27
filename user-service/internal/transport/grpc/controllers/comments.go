@@ -23,6 +23,7 @@ func NewCommentController(service iCommentService) *CommentController {
 type iCommentService interface {
 	AddComment(comment *entities.Comment) (*entities.Comment, error)
 	GetPrivateComments(payload *users.GetPrivateCommentsPayload) ([]*entities.Comment, error)
+	GetPublicComments(payload *users.GetPublicCommentsPayload) ([]*entities.Comment, error)
 }
 
 func (c *CommentController) AddComment(ctx context.Context, paylaod *users.CommentPayload) (*users.Comment, error) {
@@ -86,7 +87,6 @@ func (c *CommentController) GetPrivateComments(ctx context.Context, payload *use
 			FilmId:      int32(v.FilmId),
 			Text:        v.Text,
 			UserId:      int32(v.UserId),
-			ReplyTo:     int32(*v.ReplyTo),
 			CommentType: string(v.CommentType),
 			WasEdited:   v.WasEdited,
 			CreatedAt:   timestamppb.New(v.CreatedAt),
@@ -99,4 +99,39 @@ func (c *CommentController) GetPrivateComments(ctx context.Context, payload *use
 	}
 
 	return response, nil
+}
+
+func (c *CommentController) GetPublicComments(ctx context.Context, payload *users.GetPublicCommentsPayload) (*users.CommentsResponse, error) {
+	comments, err := c.service.GetPublicComments(payload)
+	if err != nil {
+		fail := err.(pkg.Error)
+		return nil, pkg.NewRpcError(fail.Error(), fail.Code())
+	}
+
+	resp := users.CommentsResponse{
+		Comments: []*users.Comment{},
+	}
+
+	for _, v := range comments {
+		reply := int32(0)
+		if v.ReplyTo != nil {
+			reply = int32(*v.ReplyTo)
+		}
+		com := users.Comment{
+			Id:          int32(v.Id),
+			FilmId:      int32(v.FilmId),
+			Text:        v.Text,
+			UserId:      int32(v.UserId),
+			ReplyTo:     reply,
+			Username:    v.Username,
+			AvatarLink:  v.AvatarLink,
+			CommentType: string(v.CommentType),
+			WasEdited:   v.WasEdited,
+			CreatedAt:   timestamppb.New(v.CreatedAt),
+			UpdatedAt:   timestamppb.New(v.UpdatedAt),
+		}
+		resp.Comments = append(resp.Comments, &com)
+	}
+
+	return &resp, nil
 }

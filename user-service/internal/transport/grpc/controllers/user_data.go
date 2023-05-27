@@ -60,6 +60,7 @@ func (c *UserDataController) UploadData(stream users.UserDataUploader_UploadData
 				payload.FavFilm = chunk.FavFilm
 				payload.FavActor = chunk.FavActor
 				payload.FavGenre = chunk.FavGenre
+				payload.Username = chunk.Username
 			}
 		}
 	}(errorQuit)
@@ -70,6 +71,7 @@ func (c *UserDataController) UploadData(stream users.UserDataUploader_UploadData
 		if len(payload.Image) == 0 {
 			uploadData := &entities.UserData{
 				Userid:         int(payload.UserId),
+				UserName:       payload.Username,
 				FavouriteGenre: int(payload.FavGenre),
 				FavouriteActor: int(payload.FavActor),
 				FavouriteFilm:  int(payload.FavFilm),

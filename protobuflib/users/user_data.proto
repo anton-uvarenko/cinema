@@ -10,6 +10,7 @@ message UploadDataPayload {
   int32 FavGenre = 3;
   int32 FavFilm = 4;
   int32 UserId = 5;
+  string Username = 6;
 }
 
 message GetDataResponse {
