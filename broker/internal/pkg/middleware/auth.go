@@ -10,7 +10,7 @@ import (
 type AuthMiddleware struct {
 	UserType     []core.UserType
 	Recovery     bool
-	Verification bool
+	Verification *bool
 }
 
 func (m AuthMiddleware) TokenVerify(next http.Handler) http.Handler {
