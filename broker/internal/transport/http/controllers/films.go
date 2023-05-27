@@ -63,6 +63,7 @@ func (c *FilmController) RedirectRequest(w http.ResponseWriter, r *http.Request)
 		return
 	}
 	req.Header = r.Header.Clone()
+	req.Form = r.Form
 	if req.FormValue("user_id") != "" {
 		req.Form.Set("user_id", id)
 	}

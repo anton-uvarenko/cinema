@@ -181,6 +181,7 @@ func (r *Router) InitRoutes() http.Handler {
 				Recovery: false,
 				UserType: []core.UserType{
 					core.Admin,
+					core.Premium,
 				},
 				Verification: &verified,
 			}
