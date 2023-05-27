@@ -88,8 +88,8 @@ func (r *Router) InitRoutes() http.Handler {
 
 			// films
 			rt.Post("/", r.controllers.FilmsController.RedirectRequest)
-			rt.Put("/{id}/update", r.controllers.FilmsController.RedirectRequest)
-			rt.Delete("/{id}/delete", r.controllers.FilmsController.RedirectRequest)
+			rt.Put("/{id}/update/", r.controllers.FilmsController.RedirectRequest)
+			rt.Delete("/{id}/delete/", r.controllers.FilmsController.RedirectRequest)
 		})
 
 		router.Group(func(rt chi.Router) {
@@ -121,8 +121,8 @@ func (r *Router) InitRoutes() http.Handler {
 			rt.Use(mid.TokenVerify)
 
 			rt.Post("/", r.controllers.FilmsController.RedirectRequest)
-			rt.Post("/{id}/update", r.controllers.FilmsController.RedirectRequest)
-			rt.Delete("/{id}/delete", r.controllers.FilmsController.RedirectRequest)
+			rt.Post("/{id}/update/", r.controllers.FilmsController.RedirectRequest)
+			rt.Delete("/{id}/delete/", r.controllers.FilmsController.RedirectRequest)
 		})
 
 		router.Group(func(rt chi.Router) {
@@ -138,7 +138,7 @@ func (r *Router) InitRoutes() http.Handler {
 			rt.Use(mid.TokenVerify)
 
 			rt.Get("/", r.controllers.FilmsController.RedirectRequest)
-			rt.Get("/{id}", r.controllers.FilmsController.RedirectRequest)
+			rt.Get("/{id}/", r.controllers.FilmsController.RedirectRequest)
 		})
 	})
 
@@ -154,8 +154,8 @@ func (r *Router) InitRoutes() http.Handler {
 			rt.Use(mid.TokenVerify)
 
 			rt.Post("/", r.controllers.FilmsController.RedirectRequest)
-			rt.Put("/{id}/update", r.controllers.FilmsController.RedirectRequest)
-			rt.Delete("/{id}/delete", r.controllers.FilmsController.RedirectRequest)
+			rt.Put("/{id}/update/", r.controllers.FilmsController.RedirectRequest)
+			rt.Delete("/{id}/delete/", r.controllers.FilmsController.RedirectRequest)
 		})
 
 		router.Group(func(rt chi.Router) {
@@ -171,7 +171,7 @@ func (r *Router) InitRoutes() http.Handler {
 			rt.Use(mid.TokenVerify)
 
 			rt.Get("/", r.controllers.FilmsController.RedirectRequest)
-			rt.Get("/{id}", r.controllers.FilmsController.RedirectRequest)
+			rt.Get("/{id}/", r.controllers.FilmsController.RedirectRequest)
 		})
 	})
 
@@ -187,8 +187,8 @@ func (r *Router) InitRoutes() http.Handler {
 			rt.Use(mid.TokenVerify)
 
 			rt.Post("/", r.controllers.FilmsController.RedirectRequest)
-			rt.Put("/{id}/update", r.controllers.FilmsController.RedirectRequest)
-			rt.Delete("/{id}/delete", r.controllers.FilmsController.RedirectRequest)
+			rt.Put("/{id}/update/", r.controllers.FilmsController.RedirectRequest)
+			rt.Delete("/{id}/delete/", r.controllers.FilmsController.RedirectRequest)
 		})
 
 		router.Group(func(rt chi.Router) {
@@ -204,7 +204,7 @@ func (r *Router) InitRoutes() http.Handler {
 			rt.Use(mid.TokenVerify)
 
 			rt.Get("/", r.controllers.FilmsController.RedirectRequest)
-			rt.Get("/{id}", r.controllers.FilmsController.RedirectRequest)
+			rt.Get("/{id}/", r.controllers.FilmsController.RedirectRequest)
 		})
 	})
 
