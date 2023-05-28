@@ -81,7 +81,13 @@ func (s *AuthService) SignUp(user *entities.User) (string, error) {
 		return "", pkg.NewError("error creating jwt", http.StatusInternalServerError)
 	}
 
+	//todo make asynchronously
 	err = pkg.SendBasicPlaylists(dbUser.Id)
+	if err != nil {
+		return "", err
+	}
+
+	err = pkg.SendBasicUserDataRequests(dbUser.Id, dbUser.Username)
 	if err != nil {
 		return "", err
 	}

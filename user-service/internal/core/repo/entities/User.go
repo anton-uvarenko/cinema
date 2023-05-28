@@ -53,7 +53,7 @@ func (r *UserRepo) AddData(u *UserData) (*UserData, error) {
 		favourite_genre = $2,
 		favourite_actor = $3,
 		favourite_film = $4,
-		avatar_name = $5
+		avatar_name = $5,
 		username = $6
 	RETURNING user_id
 `

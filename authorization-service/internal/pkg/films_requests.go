@@ -25,8 +25,11 @@ func SendBasicPlaylists(id int) error {
 		return NewError("can't create request", http.StatusInternalServerError)
 	}
 
-	req.Form.Add("title", "Watch later")
-	req.Form.Add("user_id", fmt.Sprintf("%d", id))
+	formVals := url.Values{}
+
+	formVals.Set("title", "Watch later")
+	formVals.Set("user_id", fmt.Sprintf("%d", id))
+	req.Form = formVals
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
@@ -43,8 +46,7 @@ func SendBasicPlaylists(id int) error {
 		return NewError("can't create request", http.StatusInternalServerError)
 	}
 
-	req.Form.Add("title", "Watched")
-	req.Form.Add("user_id", fmt.Sprintf("%d", id))
+	formVals.Set("title", "Watched")
 
 	resp, err = http.DefaultClient.Do(req)
 	if err != nil {
