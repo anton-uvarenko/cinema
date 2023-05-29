@@ -115,6 +115,10 @@ func (c *UserDataController) GetData(ctx context.Context, payload *users.GetData
 		return nil, pkg.NewRpcError(fail.Error(), fail.Code())
 	}
 
+	if data == nil {
+		return nil, pkg.NewRpcError("not found", http.StatusNotFound)
+	}
+
 	imageLink := s3DefaultLink + data.AvatarName
 	if data.AvatarName == "" {
 		imageLink = ""

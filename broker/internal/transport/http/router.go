@@ -77,6 +77,10 @@ func (r *Router) InitRoutes() http.Handler {
 
 	app.Route("/films", func(router chi.Router) {
 		router.Group(func(rt chi.Router) {
+			rt.Get("/mane-page", r.controllers.FilmsController.ManePageRequest)
+		})
+
+		router.Group(func(rt chi.Router) {
 			mid := md.AuthMiddleware{
 				Recovery: false,
 				UserType: []core.UserType{

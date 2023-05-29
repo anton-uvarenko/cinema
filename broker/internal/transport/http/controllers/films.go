@@ -2,8 +2,10 @@ package controllers
 
 import (
 	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/anton-uvarenko/cinema/broker-service/internal/core"
 	"github.com/anton-uvarenko/cinema/broker-service/internal/pkg"
 	"github.com/sirupsen/logrus"
 	"io"
@@ -88,4 +90,28 @@ func (c *FilmController) RedirectRequest(w http.ResponseWriter, r *http.Request)
 
 	w.WriteHeader(resp.StatusCode)
 	w.Write(respBody)
+}
+
+func (c *FilmController) ManePageRequest(w http.ResponseWriter, r *http.Request) {
+	nFilms := make(chan core.Films)
+	iFilms := make(chan core.Films)
+	lFilms := make(chan core.Films)
+
+	go pkg.DoFilmRequest(nFilms, "http://"+os.Getenv("DNS_FILMS")+":8000"+"/films/?release_date_after=2021&release&date_before=2024&order_by=imdb&page_size=3&page=1")
+	go pkg.DoFilmRequest(iFilms, "http://"+os.Getenv("DNS_FILMS")+":8000"+"/films/?order_by=imdb_rating&page_size=3&page=1")
+	go pkg.DoFilmRequest(lFilms, "http://"+os.Getenv("DNS_FILMS")+":8000"+"/films/?order_by=rating&page_size=3&page=1")
+
+	resp := core.ManePageResponse{
+		NewFilms:         <-nFilms,
+		IBMRatingFilms:   <-iFilms,
+		LocalRatingFilms: <-lFilms,
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	err := json.NewEncoder(w).Encode(&resp)
+	if err != nil {
+		logrus.Error(err)
+		http.Error(w, "error encoding response", http.StatusInternalServerError)
+		return
+	}
 }

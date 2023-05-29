@@ -100,6 +100,8 @@ func (s *UserDataService) GetData(userId int) (*entities.UserData, error) {
 		if err == sql.ErrNoRows {
 			return nil, pkg.NewError("no data was registered", http.StatusNotFound)
 		}
+
+		return nil, pkg.NewError("error reading data from database", http.StatusInternalServerError)
 	}
 
 	return data, nil

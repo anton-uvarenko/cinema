@@ -115,7 +115,7 @@ func (r *UserRepo) GetUserDataById(id int) (*UserData, error) {
 	err := r.db.GetContext(ctx, resp, query, id)
 	if err != nil {
 		logrus.Error(err)
-		return nil, errors.New("error retrieving data from db: " + err.Error())
+		return nil, err
 	}
 
 	return resp, nil
@@ -131,7 +131,8 @@ func (r *UserRepo) GetUserDataByIds(ids []int) ([]UserData, error) {
 		favourite_genre,
 		favourite_actor,
 		favourite_film,
-		avatar_name
+		avatar_name,
+		username
 	FROM user_data
 	WHERE user_id = ANY($1)
 `
