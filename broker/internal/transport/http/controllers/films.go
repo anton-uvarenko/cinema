@@ -97,7 +97,7 @@ func (c *FilmController) ManePageRequest(w http.ResponseWriter, r *http.Request)
 	iFilms := make(chan core.Films)
 	lFilms := make(chan core.Films)
 
-	go pkg.DoFilmRequest(nFilms, "http://"+os.Getenv("DNS_FILMS")+":8000"+"/films/?release_date_after=2021&release&date_before=2024&order_by=imdb&page_size=3&page=1")
+	go pkg.DoFilmRequest(nFilms, "http://"+os.Getenv("DNS_FILMS")+":8000"+"/films/?release_date_after=2023&release&date_before=2023&order_by=imdb&page_size=3&page=1")
 	go pkg.DoFilmRequest(iFilms, "http://"+os.Getenv("DNS_FILMS")+":8000"+"/films/?order_by=imdb_rating&page_size=3&page=1")
 	go pkg.DoFilmRequest(lFilms, "http://"+os.Getenv("DNS_FILMS")+":8000"+"/films/?order_by=rating&page_size=3&page=1")
 

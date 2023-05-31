@@ -18,8 +18,12 @@ const s3DefaultLink = "https://cinema-avatar-photos.s3.eu-central-1.amazonaws.co
 
 type iCommentRepo interface {
 	AddComment(c entities.Comment) (*entities.Comment, error)
+	LikeComment(userId int, commentId int) (*entities.Comment, error)
+	GetLikedCommentsIds(userId int, filmId int) ([]int, error)
 	GetPrivateCommentsByFilmId(filmId int, userId int, offset int, limit int) ([]*entities.Comment, error)
 	GetPublicCommentsByFilmId(filmId int, limit int, offset int, repliesAmmount int) ([]*entities.Comment, error)
+	DeleteAllUserComments(userId int) error
+	DeleteSingleComment(commentId int) error
 }
 
 type iCMUserDataRepo interface {
@@ -96,5 +100,72 @@ func (s *CommentsService) GetPublicComments(payload *users.GetPublicCommentsPayl
 		}
 	}
 
+	liked, err := s.commentRepo.GetLikedCommentsIds(int(payload.UserId), int(payload.FilmId))
+	if err != nil {
+		if err != sql.ErrNoRows {
+			return nil, pkg.NewError("error requesting database data", http.StatusInternalServerError)
+		}
+	}
+
+	for i := range comments {
+		for _, v := range liked {
+			logrus.Info(comments[i].Id, v)
+			if v == comments[i].Id {
+				comments[i].IsLiked = true
+			}
+		}
+	}
+
 	return comments, nil
+}
+
+func (s *CommentsService) LikeComment(payload *users.LikeCommentPayload) (*entities.Comment, error) {
+	comment, err := s.commentRepo.LikeComment(int(payload.UserId), int(payload.CommentId))
+	if err != nil {
+		logrus.Error(err)
+		return nil, pkg.NewError("error sending data to db", http.StatusInternalServerError)
+	}
+
+	userData, err := s.userDataRepo.GetUserDataByIds([]int{int(payload.UserId)})
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, pkg.NewError("no user data found", http.StatusNotFound)
+		}
+		logrus.Error(err)
+		return nil, pkg.NewError("error getting user data", http.StatusInternalServerError)
+	}
+
+	if userData[0].AvatarName != "" {
+		comment.AvatarLink = s3DefaultLink + userData[0].AvatarName
+	}
+
+	comment.Username = userData[0].UserName
+
+	return comment, nil
+}
+
+func (s *CommentsService) DeleteAllUserComments(userId int) error {
+	err := s.commentRepo.DeleteAllUserComments(userId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return pkg.NewError("no such user", http.StatusNotFound)
+		}
+
+		logrus.Error(err)
+		return pkg.NewError("error deleteing comments", http.StatusInternalServerError)
+	}
+	return nil
+}
+
+func (s *CommentsService) DeleteSingleComment(commentId int) error {
+	err := s.DeleteSingleComment(commentId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return pkg.NewError("no such user", http.StatusNotFound)
+		}
+
+		logrus.Error(err)
+		return pkg.NewError("error deleteing comments", http.StatusInternalServerError)
+	}
+	return nil
 }

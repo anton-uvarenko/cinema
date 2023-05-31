@@ -27,6 +27,7 @@ type UserDataUploaderClient interface {
 	GetData(ctx context.Context, in *GetDataPayload, opts ...grpc.CallOption) (*GetDataResponse, error)
 	UpdateData(ctx context.Context, opts ...grpc.CallOption) (UserDataUploader_UpdateDataClient, error)
 	DeleteData(ctx context.Context, in *DeleteDataPayload, opts ...grpc.CallOption) (*general.Empty, error)
+	DeleteImage(ctx context.Context, in *DeleteImagePayload, opts ...grpc.CallOption) (*general.Empty, error)
 }
 
 type userDataUploaderClient struct {
@@ -123,6 +124,15 @@ func (c *userDataUploaderClient) DeleteData(ctx context.Context, in *DeleteDataP
 	return out, nil
 }
 
+func (c *userDataUploaderClient) DeleteImage(ctx context.Context, in *DeleteImagePayload, opts ...grpc.CallOption) (*general.Empty, error) {
+	out := new(general.Empty)
+	err := c.cc.Invoke(ctx, "/users.UserDataUploader/DeleteImage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserDataUploaderServer is the server API for UserDataUploader service.
 // All implementations must embed UnimplementedUserDataUploaderServer
 // for forward compatibility
@@ -131,6 +141,7 @@ type UserDataUploaderServer interface {
 	GetData(context.Context, *GetDataPayload) (*GetDataResponse, error)
 	UpdateData(UserDataUploader_UpdateDataServer) error
 	DeleteData(context.Context, *DeleteDataPayload) (*general.Empty, error)
+	DeleteImage(context.Context, *DeleteImagePayload) (*general.Empty, error)
 	mustEmbedUnimplementedUserDataUploaderServer()
 }
 
@@ -149,6 +160,9 @@ func (UnimplementedUserDataUploaderServer) UpdateData(UserDataUploader_UpdateDat
 }
 func (UnimplementedUserDataUploaderServer) DeleteData(context.Context, *DeleteDataPayload) (*general.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteData not implemented")
+}
+func (UnimplementedUserDataUploaderServer) DeleteImage(context.Context, *DeleteImagePayload) (*general.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteImage not implemented")
 }
 func (UnimplementedUserDataUploaderServer) mustEmbedUnimplementedUserDataUploaderServer() {}
 
@@ -251,6 +265,24 @@ func _UserDataUploader_DeleteData_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserDataUploader_DeleteImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteImagePayload)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserDataUploaderServer).DeleteImage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/users.UserDataUploader/DeleteImage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserDataUploaderServer).DeleteImage(ctx, req.(*DeleteImagePayload))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserDataUploader_ServiceDesc is the grpc.ServiceDesc for UserDataUploader service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -265,6 +297,10 @@ var UserDataUploader_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteData",
 			Handler:    _UserDataUploader_DeleteData_Handler,
+		},
+		{
+			MethodName: "DeleteImage",
+			Handler:    _UserDataUploader_DeleteImage_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

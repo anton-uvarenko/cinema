@@ -14,6 +14,8 @@ type Controllers struct {
 	SocialController       *controllers.SocialAuthController
 	CommentsController     *controllers.CommentController
 	UserDataController     *controllers.UserDataController
+	AdminContoller         *controllers.AdminController
+	PremiumController      *controllers.PremiumController
 }
 
 func NewControllers(clients *grpc.AllClients, httpClient *http.Client) *Controllers {
@@ -25,5 +27,7 @@ func NewControllers(clients *grpc.AllClients, httpClient *http.Client) *Controll
 		SocialController:       controllers.NewSocialAuthController(clients.AuthClients.SocialClient),
 		CommentsController:     controllers.NewCommentController(clients.UserClients.CommentsClient),
 		UserDataController:     controllers.NewUserDataController(clients.UserClients.UserDataClients),
+		AdminContoller:         controllers.NewAdminController(clients.AuthClients.AdminClient),
+		PremiumController:      controllers.NewPremiumController(clients.AuthClients.AdminClient),
 	}
 }

@@ -29,9 +29,14 @@ message GetDataPayload {
   int32 UserId = 1;
 }
 
+message DeleteImagePayload {
+  int32 UserId = 1;
+}
+
 service UserDataUploader {
   rpc UploadData (stream UploadDataPayload) returns (general.Empty);
   rpc GetData (GetDataPayload) returns (GetDataResponse);
   rpc UpdateData(stream UploadDataPayload) returns (general.Empty);
   rpc DeleteData(DeleteDataPayload) returns (general.Empty);
+  rpc DeleteImage(DeleteImagePayload) returns (general.Empty);
 }

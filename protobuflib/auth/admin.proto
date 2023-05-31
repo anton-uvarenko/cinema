@@ -1,0 +1,31 @@
+syntax = "proto3";
+package auth;
+
+import "general.proto";
+option go_package = "github.com/anton-uvarenko/cinema/authorization-service/protobufs/auth";
+
+message UpdateUserTypePayload {
+  int32 UserId = 1;
+  string UserType = 2;
+}
+
+message DeleteUserPayload {
+  int32 UserId = 1;
+}
+
+message UserResponse {
+  int32 UserId = 1;
+  string Email = 2;
+  string UserType = 3;
+  string Username = 4;
+}
+
+message GetAllUsersResponse {
+  repeated UserResponse Users = 1;
+}
+
+service AdminHandler {
+  rpc UpdateUserType(UpdateUserTypePayload) returns (general.JwtResponse);
+  rpc DelteUser(DeleteUserPayload) returns (general.Empty);
+  rpc GetAllUsers(general.Empty) returns (GetAllUsersResponse);
+}

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"github.com/anton-uvarenko/cinema/broker-service/internal/pkg"
 	"github.com/anton-uvarenko/cinema/broker-service/protobufs/users"
+	"github.com/go-chi/chi/v5"
 	"github.com/sirupsen/logrus"
 	"net/http"
 	"strconv"
@@ -69,12 +70,14 @@ func (c *CommentController) GetPublicComments(w http.ResponseWriter, r *http.Req
 		return
 	}
 	respAmount, _ := strconv.Atoi(r.URL.Query().Get("resp_amount"))
+	userId, _ := pkg.ParseWithId(strings.Split(r.Header.Get("Authorization"), " ")[1])
 
 	payload := users.GetPublicCommentsPayload{
 		FilmId:          int32(filmId),
 		Page:            int32(page),
 		Amount:          int32(amount),
 		ResponsesAmount: int32(respAmount),
+		UserId:          int32(userId),
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
@@ -132,6 +135,38 @@ func (c *CommentController) GetPrivateComments(w http.ResponseWriter, r *http.Re
 	w.Header().Set("Content-Type", "application/json")
 	err = json.NewEncoder(w).Encode(resp)
 	if err != nil {
+		http.Error(w, "error encoding response", http.StatusInternalServerError)
+		return
+	}
+}
+
+func (c *CommentController) LikeComment(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancel()
+
+	id, _ := pkg.ParseWithId(strings.Split(r.Header.Get("Authorization"), " ")[1])
+	commentId, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		http.Error(w, "wrong comment_id", http.StatusBadRequest)
+		return
+	}
+
+	payload := users.LikeCommentPayload{
+		UserId:    int32(id),
+		CommentId: int32(commentId),
+	}
+
+	resp, err := c.client.LikeComment(ctx, &payload)
+	if err != nil {
+		fail := pkg.CustToPkgError(err.Error())
+		http.Error(w, fail.Error(), fail.Code())
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(resp)
+	if err != nil {
+		logrus.Error(err)
 		http.Error(w, "error encoding response", http.StatusInternalServerError)
 		return
 	}

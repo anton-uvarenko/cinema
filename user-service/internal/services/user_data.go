@@ -22,6 +22,8 @@ type UserDataService struct {
 type iUserData interface {
 	AddData(u *entities.UserData) (*entities.UserData, error)
 	GetUserDataById(id int) (*entities.UserData, error)
+	DeleteUserData(id int) error
+	DeleteImage(id int) error
 }
 
 func NewUserDataService(repo iUserData) *UserDataService {
@@ -105,4 +107,30 @@ func (s *UserDataService) GetData(userId int) (*entities.UserData, error) {
 	}
 
 	return data, nil
+}
+
+func (s *UserDataService) DeleteData(userId int) error {
+	err := s.repo.DeleteUserData(userId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return pkg.NewError("no data found", http.StatusNotFound)
+		}
+
+		logrus.Error(err)
+		return pkg.NewError("can't delete data", http.StatusInternalServerError)
+	}
+	return nil
+}
+
+func (s *UserDataService) DeleteImage(userId int) error {
+	err := s.repo.DeleteImage(userId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return pkg.NewError("no data found", http.StatusNotFound)
+		}
+
+		logrus.Error(err)
+		return pkg.NewError("can't delete data", http.StatusInternalServerError)
+	}
+	return nil
 }

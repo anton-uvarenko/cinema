@@ -82,7 +82,7 @@ func (s *AuthService) SignUp(user *entities.User) (string, error) {
 	}
 
 	//todo make asynchronously
-	err = pkg.SendBasicPlaylists(dbUser.Id)
+	err = pkg.SendBasicPlaylists(dbUser.Id, dbUser.UserType)
 	if err != nil {
 		return "", err
 	}

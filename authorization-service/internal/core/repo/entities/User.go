@@ -137,6 +137,27 @@ func (r *UserRepo) GetUserByEmail(email string) (*User, error) {
 	return user, nil
 }
 
+func (r *UserRepo) GetAllUsers() ([]User, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), DefaultExecTimeout)
+	defer cancel()
+
+	query := `
+	SELECT 
+	    id,
+	    username,
+	    email,
+	    user_type
+	FROM users
+`
+	users := []User{}
+	err := r.db.SelectContext(ctx, &users, query)
+	if err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}
+
 func (r *UserRepo) MarkAsVerified(id int) error {
 	ctx, cancel := context.WithTimeout(context.Background(), DefaultExecTimeout)
 	defer cancel()
@@ -190,4 +211,51 @@ func (r *UserRepo) UpdatePassword(id int, password string, salt string) error {
 	}
 
 	return nil
+}
+
+func (r *UserRepo) UpdateUserType(id int, userType UserType) (*User, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), DefaultExecTimeout)
+	defer cancel()
+
+	query := `
+	UPDATE users
+	SET user_type = $1
+	WHERE id = $2
+`
+
+	_, err := r.db.ExecContext(ctx, query, userType, id)
+	if err != nil {
+		return nil, err
+	}
+
+	query = `
+	SELECT 
+	    id, 
+	    avatar_name, 
+	    username, 
+	    email, 
+		password_recovery_code,
+		password,
+		salt,
+		user_type,
+		is_verified
+	FROM users
+	WHERE id = $1
+`
+	user := &User{}
+	err = r.db.GetContext(context.Background(), user, query, id)
+	return user, err
+}
+
+func (r *UserRepo) DeleteUser(id int) error {
+	ctx, cancel := context.WithTimeout(context.Background(), DefaultExecTimeout)
+	defer cancel()
+
+	query := `
+	DELETE FROM users
+	WHERE id = $1
+`
+
+	_, err := r.db.ExecContext(ctx, query, id)
+	return err
 }

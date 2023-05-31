@@ -3,6 +3,7 @@ package pkg
 import (
 	"bytes"
 	"fmt"
+	"github.com/anton-uvarenko/cinema/authorization-service/internal/core/repo/entities"
 	"github.com/sirupsen/logrus"
 	"io"
 	"net/http"
@@ -10,7 +11,7 @@ import (
 	"os"
 )
 
-func SendBasicPlaylists(id int) error {
+func SendBasicPlaylists(id int, userType entities.UserType) error {
 	rawUrl := "http://"
 	rawUrl += os.Getenv("DNS_FILMS") + ":8000"
 	rawUrl += "/playlists/"
@@ -24,6 +25,7 @@ func SendBasicPlaylists(id int) error {
 	formVals := url.Values{}
 	formVals.Set("title", "Watch later")
 	formVals.Set("user_id", fmt.Sprintf("%d", id))
+	formVals.Set("user_type", string(userType))
 
 	req, err := http.NewRequest(http.MethodPost, parsedUrl.String(), bytes.NewBuffer([]byte(formVals.Encode())))
 	if err != nil {

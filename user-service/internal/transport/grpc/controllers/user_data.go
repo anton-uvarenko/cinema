@@ -24,6 +24,8 @@ const s3DefaultLink = "https://cinema-avatar-photos.s3.eu-central-1.amazonaws.co
 type iUserDataService interface {
 	AddData(img io.Reader, userData *entities.UserData) (*entities.UserData, error)
 	GetData(userId int) (*entities.UserData, error)
+	DeleteData(userId int) error
+	DeleteImage(userId int) error
 }
 
 func NewUserDataController(service iUserDataService) *UserDataController {
@@ -133,4 +135,24 @@ func (c *UserDataController) GetData(ctx context.Context, payload *users.GetData
 	}
 
 	return resp, nil
+}
+
+func (c *UserDataController) DeleteData(ctx context.Context, payload *users.DeleteDataPayload) (*general.Empty, error) {
+	err := c.service.DeleteData(int(payload.UserId))
+	if err != nil {
+		fail := err.(pkg.Error)
+		return nil, pkg.NewRpcError(fail.Error(), fail.Code())
+	}
+
+	return &general.Empty{}, nil
+}
+
+func (c *UserDataController) DeleteImage(ctx context.Context, payload *users.DeleteImagePayload) (*general.Empty, error) {
+	err := c.service.DeleteImage(int(payload.UserId))
+	if err != nil {
+		fail := err.(pkg.Error)
+		return nil, pkg.NewRpcError(fail.Error(), fail.Code())
+	}
+
+	return &general.Empty{}, nil
 }

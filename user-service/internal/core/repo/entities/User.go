@@ -37,24 +37,21 @@ func (r *UserRepo) AddData(u *UserData) (*UserData, error) {
 	                       favourite_genre,
 	                       favourite_actor,
 	                       favourite_film,
-	                       avatar_name,
-	                       username
+	                       avatar_name
 	)
 	VALUES (
 	        $1,
 			$2,
 			$3,
 			$4,
-			$5,
-	        $6
+			$5
 	)
 	ON CONFLICT (user_id) DO UPDATE 
 	SET 
 		favourite_genre = $2,
 		favourite_actor = $3,
 		favourite_film = $4,
-		avatar_name = $5,
-		username = $6
+		avatar_name = $5
 	RETURNING user_id
 `
 
@@ -67,7 +64,6 @@ func (r *UserRepo) AddData(u *UserData) (*UserData, error) {
 		u.FavouriteActor,
 		u.FavouriteFilm,
 		u.AvatarName,
-		u.UserName,
 	).Scan(&user_id)
 	if err != nil {
 		logrus.Error(err)
@@ -147,4 +143,33 @@ func (r *UserRepo) GetUserDataByIds(ids []int) ([]UserData, error) {
 	}
 
 	return resp, nil
+}
+
+func (r *UserRepo) DeleteUserData(id int) error {
+	ctx, cancel := context.WithTimeout(context.Background(), DefaultExecTimeout)
+	defer cancel()
+
+	query := `
+	UPDATE user_data
+	SET username = 'deleted user',
+	    avatar_name = ''
+	WHERE user_id = $1
+`
+
+	_, err := r.db.ExecContext(ctx, query, id)
+	return err
+}
+
+func (r *UserRepo) DeleteImage(id int) error {
+	ctx, cancel := context.WithTimeout(context.Background(), DefaultExecTimeout)
+	defer cancel()
+
+	query := `
+	UPDATE user_data
+	SET avatar_name = ''
+	WHERE user_id = $1
+`
+
+	_, err := r.db.ExecContext(ctx, query, id)
+	return err
 }

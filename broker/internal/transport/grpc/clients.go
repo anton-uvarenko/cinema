@@ -18,6 +18,7 @@ type AuthClients struct {
 	VerificationClient auth.VerificationClient
 	PassRecoveryClient auth.PassVerifyClient
 	SocialClient       auth.SocialAuthClient
+	AdminClient        auth.AdminHandlerClient
 }
 
 func connectAuthServer() AuthClients {
@@ -41,6 +42,7 @@ func connectAuthServer() AuthClients {
 		VerificationClient: auth.NewVerificationClient(conn),
 		PassRecoveryClient: auth.NewPassVerifyClient(conn),
 		SocialClient:       auth.NewSocialAuthClient(conn),
+		AdminClient:        auth.NewAdminHandlerClient(conn),
 	}
 
 	return clients

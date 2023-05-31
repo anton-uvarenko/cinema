@@ -93,6 +93,7 @@ func (r *Router) InitRoutes() http.Handler {
 			// films
 			rt.Post("/", r.controllers.FilmsController.RedirectRequest)
 			rt.Put("/{id}/update/", r.controllers.FilmsController.RedirectRequest)
+			rt.Patch("/{id}/update/", r.controllers.FilmsController.RedirectRequest)
 			rt.Delete("/{id}/delete/", r.controllers.FilmsController.RedirectRequest)
 		})
 
@@ -125,7 +126,8 @@ func (r *Router) InitRoutes() http.Handler {
 			rt.Use(mid.TokenVerify)
 
 			rt.Post("/", r.controllers.FilmsController.RedirectRequest)
-			rt.Post("/{id}/update/", r.controllers.FilmsController.RedirectRequest)
+			rt.Put("/{id}/update/", r.controllers.FilmsController.RedirectRequest)
+			rt.Patch("/{id}/update/", r.controllers.FilmsController.RedirectRequest)
 			rt.Delete("/{id}/delete/", r.controllers.FilmsController.RedirectRequest)
 		})
 
@@ -159,6 +161,7 @@ func (r *Router) InitRoutes() http.Handler {
 
 			rt.Post("/", r.controllers.FilmsController.RedirectRequest)
 			rt.Put("/{id}/update/", r.controllers.FilmsController.RedirectRequest)
+			rt.Patch("/{id}/update/", r.controllers.FilmsController.RedirectRequest)
 			rt.Delete("/{id}/delete/", r.controllers.FilmsController.RedirectRequest)
 		})
 
@@ -193,6 +196,7 @@ func (r *Router) InitRoutes() http.Handler {
 
 			rt.Post("/", r.controllers.FilmsController.RedirectRequest)
 			rt.Put("/{id}/update/", r.controllers.FilmsController.RedirectRequest)
+			rt.Patch("/{id}/update/", r.controllers.FilmsController.RedirectRequest)
 			rt.Delete("/{id}/delete/", r.controllers.FilmsController.RedirectRequest)
 		})
 
@@ -228,6 +232,7 @@ func (r *Router) InitRoutes() http.Handler {
 		router.Post("/add", r.controllers.CommentsController.AddComment)
 		router.Get("/get-public", r.controllers.CommentsController.GetPublicComments)
 		router.Get("/get-private", r.controllers.CommentsController.GetPrivateComments)
+		router.Post("/like/{id}", r.controllers.CommentsController.LikeComment)
 	})
 
 	app.Route("/user-data", func(router chi.Router) {
@@ -244,8 +249,38 @@ func (r *Router) InitRoutes() http.Handler {
 
 		router.Post("/add", r.controllers.UserDataController.AddData)
 		router.Get("/get", r.controllers.UserDataController.GetData)
+		router.Delete("/image", r.controllers.UserDataController.DeleteImage)
 	})
 
+	app.Route("/admin", func(router chi.Router) {
+		mid := md.AuthMiddleware{
+			Recovery: false,
+			UserType: []core.UserType{
+				core.Admin,
+			},
+			Verification: &verified,
+		}
+		router.Use(mid.TokenVerify)
+
+		router.Patch("/user-type", r.controllers.AdminContoller.UpdateUserType)
+		router.Delete("/user", r.controllers.AdminContoller.DeleteUser)
+		router.Get("/", r.controllers.AdminContoller.GetAllUsers)
+	})
+
+	app.Route("/premium", func(router chi.Router) {
+		mid := md.AuthMiddleware{
+			Recovery: false,
+			UserType: []core.UserType{
+				core.Admin,
+				core.Basic,
+				core.Premium,
+			},
+			Verification: &verified,
+		}
+		router.Use(mid.TokenVerify)
+
+		router.Post("/buy", r.controllers.PremiumController.BuyPremium)
+	})
 	return app
 }
 

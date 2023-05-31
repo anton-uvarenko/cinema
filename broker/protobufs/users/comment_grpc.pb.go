@@ -27,7 +27,9 @@ type CommentsClient interface {
 	GetPublicComments(ctx context.Context, in *GetPublicCommentsPayload, opts ...grpc.CallOption) (*CommentsResponse, error)
 	GetPrivateComments(ctx context.Context, in *GetPrivateCommentsPayload, opts ...grpc.CallOption) (*CommentsResponse, error)
 	GetResponsesToComment(ctx context.Context, in *GetResponsesToCommentPaylaod, opts ...grpc.CallOption) (*CommentsResponse, error)
-	LikeComment(ctx context.Context, in *LikeCommentPayload, opts ...grpc.CallOption) (*general.Empty, error)
+	LikeComment(ctx context.Context, in *LikeCommentPayload, opts ...grpc.CallOption) (*Comment, error)
+	DeleteAllUserComments(ctx context.Context, in *DeleteAllUserCommentsPayload, opts ...grpc.CallOption) (*general.Empty, error)
+	DeleteSingleComment(ctx context.Context, in *DeleteSingleCommentPayload, opts ...grpc.CallOption) (*general.Empty, error)
 }
 
 type commentsClient struct {
@@ -74,9 +76,27 @@ func (c *commentsClient) GetResponsesToComment(ctx context.Context, in *GetRespo
 	return out, nil
 }
 
-func (c *commentsClient) LikeComment(ctx context.Context, in *LikeCommentPayload, opts ...grpc.CallOption) (*general.Empty, error) {
-	out := new(general.Empty)
+func (c *commentsClient) LikeComment(ctx context.Context, in *LikeCommentPayload, opts ...grpc.CallOption) (*Comment, error) {
+	out := new(Comment)
 	err := c.cc.Invoke(ctx, "/users.Comments/LikeComment", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *commentsClient) DeleteAllUserComments(ctx context.Context, in *DeleteAllUserCommentsPayload, opts ...grpc.CallOption) (*general.Empty, error) {
+	out := new(general.Empty)
+	err := c.cc.Invoke(ctx, "/users.Comments/DeleteAllUserComments", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *commentsClient) DeleteSingleComment(ctx context.Context, in *DeleteSingleCommentPayload, opts ...grpc.CallOption) (*general.Empty, error) {
+	out := new(general.Empty)
+	err := c.cc.Invoke(ctx, "/users.Comments/DeleteSingleComment", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -91,7 +111,9 @@ type CommentsServer interface {
 	GetPublicComments(context.Context, *GetPublicCommentsPayload) (*CommentsResponse, error)
 	GetPrivateComments(context.Context, *GetPrivateCommentsPayload) (*CommentsResponse, error)
 	GetResponsesToComment(context.Context, *GetResponsesToCommentPaylaod) (*CommentsResponse, error)
-	LikeComment(context.Context, *LikeCommentPayload) (*general.Empty, error)
+	LikeComment(context.Context, *LikeCommentPayload) (*Comment, error)
+	DeleteAllUserComments(context.Context, *DeleteAllUserCommentsPayload) (*general.Empty, error)
+	DeleteSingleComment(context.Context, *DeleteSingleCommentPayload) (*general.Empty, error)
 	mustEmbedUnimplementedCommentsServer()
 }
 
@@ -111,8 +133,14 @@ func (UnimplementedCommentsServer) GetPrivateComments(context.Context, *GetPriva
 func (UnimplementedCommentsServer) GetResponsesToComment(context.Context, *GetResponsesToCommentPaylaod) (*CommentsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetResponsesToComment not implemented")
 }
-func (UnimplementedCommentsServer) LikeComment(context.Context, *LikeCommentPayload) (*general.Empty, error) {
+func (UnimplementedCommentsServer) LikeComment(context.Context, *LikeCommentPayload) (*Comment, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LikeComment not implemented")
+}
+func (UnimplementedCommentsServer) DeleteAllUserComments(context.Context, *DeleteAllUserCommentsPayload) (*general.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteAllUserComments not implemented")
+}
+func (UnimplementedCommentsServer) DeleteSingleComment(context.Context, *DeleteSingleCommentPayload) (*general.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteSingleComment not implemented")
 }
 func (UnimplementedCommentsServer) mustEmbedUnimplementedCommentsServer() {}
 
@@ -217,6 +245,42 @@ func _Comments_LikeComment_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Comments_DeleteAllUserComments_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteAllUserCommentsPayload)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CommentsServer).DeleteAllUserComments(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/users.Comments/DeleteAllUserComments",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CommentsServer).DeleteAllUserComments(ctx, req.(*DeleteAllUserCommentsPayload))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Comments_DeleteSingleComment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteSingleCommentPayload)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CommentsServer).DeleteSingleComment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/users.Comments/DeleteSingleComment",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CommentsServer).DeleteSingleComment(ctx, req.(*DeleteSingleCommentPayload))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Comments_ServiceDesc is the grpc.ServiceDesc for Comments service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -243,6 +307,14 @@ var Comments_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "LikeComment",
 			Handler:    _Comments_LikeComment_Handler,
+		},
+		{
+			MethodName: "DeleteAllUserComments",
+			Handler:    _Comments_DeleteAllUserComments_Handler,
+		},
+		{
+			MethodName: "DeleteSingleComment",
+			Handler:    _Comments_DeleteSingleComment_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -11,7 +11,8 @@ import (
 )
 
 type userClient struct {
-	client users.UserDataUploaderClient
+	client         users.UserDataUploaderClient
+	commentsClient users.CommentsClient
 }
 
 var client = &userClient{}
@@ -34,6 +35,7 @@ func InitGrpcConnection() error {
 	logrus.Info("connecting users-data service")
 
 	client.client = users.NewUserDataUploaderClient(conn)
+	client.commentsClient = users.NewCommentsClient(conn)
 	return nil
 }
 
@@ -65,6 +67,25 @@ func SendBasicUserDataRequests(userId int, username string) error {
 	if err != nil {
 		logrus.Error(err.Error())
 		return NewError("error closing streaming connection", http.StatusInternalServerError)
+	}
+
+	return nil
+}
+
+func SendDeleteUserDataRequst(userId int) error {
+	dlPayload := users.DeleteDataPayload{
+		UserId: int32(userId),
+	}
+
+	_, err := client.client.DeleteData(context.Background(), &dlPayload)
+	if err != nil {
+		return NewError("error deleting user data", http.StatusInternalServerError)
+	}
+
+	dp := users.DeleteAllUserCommentsPayload{UserId: int32(userId)}
+	_, err = client.commentsClient.DeleteAllUserComments(context.Background(), &dp)
+	if err != nil {
+		return NewError("error deleteing comments", http.StatusInternalServerError)
 	}
 
 	return nil

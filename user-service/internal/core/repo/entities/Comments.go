@@ -30,6 +30,8 @@ type Comment struct {
 	Rating      int         `json:"rating" db:"rating"`
 	WasEdited   bool        `json:"wasEdited" db:"was_edited"`
 	FilmId      int         `json:"filmId" db:"film_id"`
+	LikesAmount int         `json:"likesAmount" db:"likes_amount"`
+	IsLiked     bool        `json:"isLiked"`
 }
 
 type CommentRepo struct {
@@ -153,21 +155,29 @@ func (r *CommentRepo) GetPublicCommentsByFilmId(filmId int, limit int, offset in
 	logrus.Warn(filmId, limit, offset, repliesAmmount)
 
 	rootComsQuery := `
-	SELECT 
-			c1.id,
-			c1.text,
-			c1.user_id,
-			c1.created_at,
-			c1.updated_at,
-			c1.reply_to,
-			c1.rating,
-			c1.was_edited,
-			c1.film_id
+	SELECT
+		c1.id,
+		c1.text,
+		c1.user_id,
+		c1.created_at,
+		c1.updated_at,
+		c1.reply_to,
+		c1.rating,
+		c1.was_edited,
+		c1.film_id,
+		COALESCE(c2.likes_amount, 0) AS likes_amount
 	FROM comments c1
+			 LEFT JOIN (
+		SELECT
+			comment_id,
+			COUNT(*) AS likes_amount
+		FROM comment_like
+		GROUP BY comment_id
+	) c2 ON c1.id = c2.comment_id
 	WHERE c1.film_id = $1
-	AND c1.comment_type = $2
-	AND c1.reply_to IS NULL
-	ORDER BY created_at DESC 
+	  AND c1.comment_type = $2
+	  AND c1.reply_to IS NULL
+	ORDER BY c1.created_at DESC
 	LIMIT $3
 	OFFSET $4 
 `
@@ -265,4 +275,115 @@ func (r *CommentRepo) GetPrivateCommentsByFilmId(filmId int, userId int, offset 
 	}
 
 	return cms, nil
+}
+
+func (r *CommentRepo) DeleteAllUserComments(userId int) error {
+	ctx, cancel := context.WithTimeout(context.Background(), DefaultExecTimeout)
+	defer cancel()
+
+	query := `
+	DELETE FROM comments
+	WHERE user_id=$1
+`
+	_, err := r.db.ExecContext(ctx, query, userId)
+	return err
+}
+
+func (r *CommentRepo) DeleteSingleComment(commentId int) error {
+	ctx, cancel := context.WithTimeout(context.Background(), DefaultExecTimeout)
+	defer cancel()
+
+	query := `
+	DELETE FROM comments
+	WHERE id=$1
+`
+	_, err := r.db.ExecContext(ctx, query, commentId)
+	return err
+}
+
+func (r *CommentRepo) LikeComment(userId int, commentId int) (*Comment, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), DefaultExecTimeout)
+	defer cancel()
+
+	query := `
+	INSERT INTO comment_like (
+	                          user_id, 
+	                          comment_id
+	                          )
+	VALUES (
+	        $1,
+	        $2
+	)
+	RETURNING comment_id
+`
+
+	var id int
+	err := r.db.QueryRowContext(ctx, query, userId, commentId).Scan(&id)
+	if err != nil {
+		if pgErr, ok := err.(*pq.Error); ok {
+			if pgErr.Code.Name() == "unique_violation" {
+				err := r.DeleteCommentLike(commentId, userId)
+				if err != nil {
+					return nil, err
+				}
+			}
+		} else {
+			return nil, err
+		}
+	}
+
+	cm := &Comment{}
+	query = `
+	SELECT * FROM comments
+	WHERE id=$1
+`
+	err = r.db.GetContext(ctx, cm, query, commentId)
+	if err != nil {
+		return nil, err
+	}
+
+	if id != 0 {
+		cm.IsLiked = true
+	}
+	return cm, nil
+}
+
+func (r *CommentRepo) DeleteCommentLike(commentId int, userId int) error {
+	ctx, cancel := context.WithTimeout(context.Background(), DefaultExecTimeout)
+	defer cancel()
+
+	query := `
+	DELETE FROM comment_like
+	WHERE user_id = $1 AND comment_id = $2
+`
+
+	_, err := r.db.ExecContext(ctx, query, userId, commentId)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *CommentRepo) GetLikedCommentsIds(userId int, filmId int) ([]int, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), DefaultExecTimeout)
+	defer cancel()
+
+	query := `
+	SELECT
+	    comment_id
+	FROM comment_like
+	WHERE user_id = $1
+	AND comment_id in (SELECT
+	                       id
+	                   FROM comments
+	                   WHERE film_id = $2)
+`
+
+	ids := []int{}
+	err := r.db.SelectContext(ctx, &ids, query, userId, filmId)
+	if err != nil {
+		return nil, err
+	}
+	return ids, nil
 }

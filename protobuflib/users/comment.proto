@@ -17,6 +17,8 @@ message Comment {
   google.protobuf.Timestamp UpdatedAt = 9;
   string AvatarLink = 10;
   string Username = 11;
+  bool IsLiked = 12;
+  int32 LikesAmount = 13;
 }
 
 message CommentsResponse {
@@ -32,8 +34,8 @@ message CommentPayload {
 }
 
 message LikeCommentPayload {
-  int32 FilmId = 1;
   int32 UserId = 2;
+  int32 CommentId = 3;
 }
 
 message GetPrivateCommentsPayload {
@@ -48,6 +50,7 @@ message GetPublicCommentsPayload {
   int32 Page = 2;
   int32 Amount = 3;
   int32 ResponsesAmount = 4;
+  int32 userId = 5;
 }
 
 message GetResponsesToCommentPaylaod {
@@ -56,10 +59,20 @@ message GetResponsesToCommentPaylaod {
   int32 Amount = 3;
 }
 
+message DeleteAllUserCommentsPayload {
+  int32 UserId = 1;
+}
+
+message DeleteSingleCommentPayload {
+  int32 CommentId = 1;
+}
+
 service Comments {
   rpc AddComment(CommentPayload) returns (Comment);
   rpc GetPublicComments(GetPublicCommentsPayload) returns (CommentsResponse);
   rpc GetPrivateComments(GetPrivateCommentsPayload) returns (CommentsResponse);
   rpc GetResponsesToComment(GetResponsesToCommentPaylaod) returns (CommentsResponse);
-  rpc LikeComment(LikeCommentPayload) returns (general.Empty);
+  rpc LikeComment(LikeCommentPayload) returns (Comment);
+  rpc DeleteAllUserComments(DeleteAllUserCommentsPayload) returns (general.Empty);
+  rpc DeleteSingleComment(DeleteSingleCommentPayload) returns (general.Empty);
 }

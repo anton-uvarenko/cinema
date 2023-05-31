@@ -141,3 +141,16 @@ func (c *UserDataController) GetData(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+func (c *UserDataController) DeleteImage(w http.ResponseWriter, r *http.Request) {
+	payload := users.DeleteImagePayload{}
+	id, _ := pkg.ParseWithId(strings.Split(r.Header.Get("Authorization"), " ")[1])
+	payload.UserId = int32(id)
+
+	_, err := c.client.DeleteImage(context.Background(), &payload)
+	if err != nil {
+		fail := pkg.CustToPkgError(err.Error())
+		http.Error(w, fail.Error(), fail.Code())
+		return
+	}
+}
